@@ -126,3 +126,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 .aider*
+
+# n8n
+.n8n/

@@ -30,13 +30,11 @@ export class LineMessagingApi implements ICredentialType {
 
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'https://api.line.me/oauth2/v2.1',
-			url: '/verify',
+			method: 'GET',
+			baseURL: 'https://api.line.me/v2/bot',
+			url: '/info',
 			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded',
-			},
-			body: {
-				access_token: '={{$credentials.accessToken}}',
+				Authorization: '={{"Bearer " + $credentials.accessToken}}',
 			},
 			json: true,
 		},
