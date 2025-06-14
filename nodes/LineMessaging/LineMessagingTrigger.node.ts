@@ -4,7 +4,7 @@ import type {
 	INodeTypeDescription,
 	IWebhookResponseData,
 } from 'n8n-workflow';
-import { NodeApiError, NodeConnectionType } from 'n8n-workflow';
+import { NodeConnectionType } from 'n8n-workflow';
 import * as crypto from 'crypto';
 
 export class LineMessagingTrigger implements INodeType {
@@ -41,32 +41,30 @@ export class LineMessagingTrigger implements INodeType {
 
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
 		const credentials = await this.getCredentials('lineMessagingApi');
-		const receivedSignature = this.getHeaderData('x-line-signature');
+		const headers = this.getHeaderData();
 		const bodyData = this.getBodyData();
-		
+
+		const receivedSignature = headers['x-line-signature'] as string;
 		// Verify the signature using the channel secret
 		const channelSecret = credentials.channelSecret as string;
 		const bodyString = JSON.stringify(bodyData);
-		
+
 		// Create hmac using sha256
 		const hmac = crypto.createHmac('sha256', channelSecret);
 		hmac.update(bodyString);
 		const calculatedSignature = hmac.digest('base64');
-		
+
 		// Compare the calculated signature with the received one
 		if (receivedSignature !== calculatedSignature) {
-			throw new NodeApiError(this.getNode(), bodyData, {
-				message: 'Line signature verification failed',
-				description: 'The signature in the x-line-signature header does not match the calculated signature',
-			});
+			const res = this.getResponseObject();
+			res.status(403).json({ error: 'Invalid signature' });
+			return {
+				noWebhookResponse: true,
+			};
 		}
 
 		return {
-			workflowData: [
-				{
-					json: bodyData,
-				},
-			],
+			workflowData: [],
 		};
 	}
 }
