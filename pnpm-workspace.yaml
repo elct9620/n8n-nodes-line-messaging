@@ -1,0 +1,2 @@
+onlyBuiltDependencies:
+  - eslint-plugin-n8n-nodes-base

@@ -1,0 +1,54 @@
+{
+	"name": "@aotoki/n8n-nodes-line-messaging",
+	"version": "0.1.0",
+	"description": "The LINE Bot node for n8n, which allows you to send messages to LINE users using the LINE Messaging API.",
+	"main": "index.js",
+	"scripts": {
+		"build": "rimraf dist && tsc && gulp build:icons",
+		"dev": "tsc --watch",
+		"format": "prettier nodes --write",
+		"lint": "eslint nodes package.json",
+		"lintfix": "eslint nodes package.json --fix",
+		"prepublish": "pnpm build && pnpm lint -c .eslintrc.prepublish.js nodes package.json"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/elct9620/n8n-nodes-line-bot"
+	},
+	"files": [
+		"dist"
+	],
+	"keywords": [
+		"n8n-community-node-package"
+	],
+	"engines": {
+		"node": ">=20.15"
+	},
+	"author": {
+		"name": "Aotokitsuruya"
+	},
+	"license": "MIT",
+	"packageManager": "pnpm@10.11.1",
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"credentials": [
+			"dist/credentials/LineMessagingApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/LineMessaging/LineMessaging.node.js",
+			"dist/nodes/LineMessaging/LineMessagingTrigger.node.js"
+		]
+	},
+	"devDependencies": {
+		"@typescript-eslint/parser": "~8.32.0",
+		"eslint": "^8.57.0",
+		"eslint-plugin-n8n-nodes-base": "^1.16.3",
+		"gulp": "^5.0.1",
+		"prettier": "^3.5.3",
+		"rimraf": "^6.0.1",
+		"typescript": "^5.8.2"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}
