@@ -6,6 +6,7 @@ import type {
 	JsonObject,
 } from 'n8n-workflow';
 import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
+import { Message, MessageType } from './Message';
 
 export class LineMessaging implements INodeType {
 	description: INodeTypeDescription = {
@@ -78,34 +79,56 @@ export class LineMessaging implements INodeType {
 				placeholder: 'Add Message',
 				options: [
 					{
-						name: 'messageValues',
 						displayName: 'Message',
+						name: 'values',
 						values: [
 							{
 								displayName: 'Type',
 								name: 'type',
 								type: 'options',
+								default: 'textV2',
 								options: [
 									{
-										name: 'Text',
-										value: 'text',
+										name: 'Text Message (V2)',
+										value: MessageType.TextV2,
 									},
 								],
-								default: 'text',
-								description: 'Message type',
 							},
+
+							/**
+							 * Quote Token
+							 */
+							{
+								displayName: 'Quote Token',
+								name: 'quoteToken',
+								type: 'string',
+								typeOptions: { password: true },
+								default: '',
+								placeholder: '1234567890',
+								description:
+									'The quote token to use for quoting a message. If not provided, the message will be sent as a new message.',
+								displayOptions: {
+									show: {
+										type: [MessageType.TextV2],
+									},
+								},
+							},
+
+							/**
+							 * Text Message
+							 */
 							{
 								displayName: 'Text',
 								name: 'text',
 								type: 'string',
 								default: '',
+								placeholder: 'Hello, World!',
+								description: 'The text message to send',
 								displayOptions: {
 									show: {
-										type: ['text'],
+										type: [MessageType.TextV2],
 									},
 								},
-								description: 'Message text',
-								placeholder: 'Hello, user',
 							},
 						],
 					},
@@ -120,18 +143,15 @@ export class LineMessaging implements INodeType {
 		const returnData: INodeExecutionData[] = [];
 		const type = this.getNodeParameter('type', 0) as string;
 
-		const channelAccessToken = credentials.channelAccessToken as string;
+		const channelAccessToken = credentials.accessToken as string;
 
 		for (let i = 0; i < items.length; i++) {
 			try {
-				const messagesCollection = this.getNodeParameter('messages', i, { messageValues: [] }) as {
-					messageValues?: Array<{
-						type: string;
-						text?: string;
-					}>;
+				const messagesCollection = this.getNodeParameter('messages', i, { values: [] }) as {
+					values?: Array<Message>;
 				};
-				
-				const messages = messagesCollection.messageValues || [];
+
+				const messages = messagesCollection.values || [];
 				const replyToken = this.getNodeParameter('replyToken', i, '') as string;
 
 				if (type === 'reply' && !replyToken) {
@@ -142,17 +162,6 @@ export class LineMessaging implements INodeType {
 					throw new NodeOperationError(this.getNode(), 'At least one message is required');
 				}
 
-				// Format the messages for the LINE API
-				const formattedMessages = messages.map((message) => {
-					if (message.type === 'text') {
-						return {
-							type: 'text',
-							text: message.text,
-						};
-					}
-					return null;
-				}).filter(Boolean);
-
 				// Make API call to Line Messaging API
 				if (type === 'reply') {
 					const responseData = await this.helpers.request({
@@ -160,15 +169,15 @@ export class LineMessaging implements INodeType {
 						url: 'https://api.line.me/v2/bot/message/reply',
 						headers: {
 							'Content-Type': 'application/json',
-							'Authorization': `Bearer ${channelAccessToken}`,
+							Authorization: `Bearer ${channelAccessToken}`,
 						},
 						body: {
-							replyToken: replyToken,
-							messages: formattedMessages,
+							replyToken,
+							messages,
 						},
 						json: true,
 					});
-					
+
 					returnData.push({
 						json: { success: true, response: responseData },
 					});
