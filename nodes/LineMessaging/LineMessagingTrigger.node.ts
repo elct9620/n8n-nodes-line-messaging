@@ -6,6 +6,7 @@ import type {
 } from 'n8n-workflow';
 import { NodeConnectionType } from 'n8n-workflow';
 import { verifySignature } from './GenericFunctions';
+import type { IWebhook } from './IWebhook';
 
 export class LineMessagingTrigger implements INodeType {
 	description: INodeTypeDescription = {
@@ -42,11 +43,11 @@ export class LineMessagingTrigger implements INodeType {
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
 		const credentials = await this.getCredentials('lineMessagingApi');
 		const headers = this.getHeaderData();
-		const bodyData = this.getBodyData();
+		const bodyData = this.getBodyData() as any as IWebhook;
 
 		const receivedSignature = headers['x-line-signature'] as string;
 		const channelSecret = credentials.channelSecret as string;
-		
+
 		// Verify the signature
 		if (!verifySignature(channelSecret, receivedSignature, bodyData)) {
 			const res = this.getResponseObject();
@@ -57,7 +58,7 @@ export class LineMessagingTrigger implements INodeType {
 		}
 
 		return {
-			workflowData: [],
+			workflowData: [this.helpers.returnJsonArray(bodyData.events)],
 		};
 	}
 }
