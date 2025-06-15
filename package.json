@@ -36,8 +36,7 @@
 		],
 		"nodes": [
 			"dist/nodes/LineMessaging/LineMessaging.node.js",
-			"dist/nodes/LineMessaging/LineMessagingTrigger.node.js",
-			"dist/nodes/LineMessage/LineMessage.node.js"
+			"dist/nodes/LineMessaging/LineMessagingTrigger.node.js"
 		]
 	},
 	"devDependencies": {
