@@ -1,4 +1,12 @@
 import * as crypto from 'crypto';
+import type {
+	IDataObject,
+	IExecuteFunctions,
+	IHookFunctions,
+	IHttpRequestMethods,
+	ILoadOptionsFunctions,
+	IWebhookFunctions,
+} from 'n8n-workflow';
 
 /**
  * Verifies the Line Message API signature
@@ -18,4 +26,42 @@ export function verifySignature(channelSecret: string, signature: string, body: 
 	
 	// Compare the calculated signature with the received one
 	return signature === calculatedSignature;
+}
+
+/**
+ * Makes an API request to the Line Messaging API
+ *
+ * @param {IHookFunctions | IExecuteFunctions | ILoadOptionsFunctions | IWebhookFunctions} this The context
+ * @param {IHttpRequestMethods} method The HTTP method
+ * @param {string} endpoint The endpoint to call
+ * @param {IDataObject} body The request body
+ * @param {IDataObject} [query] The query parameters
+ * @param {IDataObject} [option] Additional options for the request
+ * @returns {Promise<any>} The response data
+ */
+export async function apiRequest(
+	this: IHookFunctions | IExecuteFunctions | ILoadOptionsFunctions | IWebhookFunctions,
+	method: IHttpRequestMethods,
+	endpoint: string,
+	body: IDataObject,
+	query?: IDataObject,
+	option: IDataObject = {},
+): Promise<any> {
+	const credentials = await this.getCredentials('lineMessagingApi');
+	const channelAccessToken = credentials.accessToken as string;
+
+	const options = {
+		method,
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${channelAccessToken}`,
+		},
+		body,
+		url: `https://api.line.me/v2/bot${endpoint}`,
+		qs: query,
+		json: true,
+		...option,
+	};
+
+	return this.helpers.request(options);
 }

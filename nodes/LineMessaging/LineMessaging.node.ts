@@ -7,6 +7,7 @@ import type {
 } from 'n8n-workflow';
 import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
 import { Message, MessageType } from './Message';
+import { apiRequest } from './GenericFunctions';
 
 export class LineMessaging implements INodeType {
 	description: INodeTypeDescription = {
@@ -143,7 +144,6 @@ export class LineMessaging implements INodeType {
 		const returnData: INodeExecutionData[] = [];
 		const type = this.getNodeParameter('type', 0) as string;
 
-		const channelAccessToken = credentials.accessToken as string;
 
 		for (let i = 0; i < items.length; i++) {
 			try {
@@ -164,19 +164,15 @@ export class LineMessaging implements INodeType {
 
 				// Make API call to Line Messaging API
 				if (type === 'reply') {
-					const responseData = await this.helpers.request({
-						method: 'POST',
-						url: 'https://api.line.me/v2/bot/message/reply',
-						headers: {
-							'Content-Type': 'application/json',
-							Authorization: `Bearer ${channelAccessToken}`,
-						},
-						body: {
+					const responseData = await apiRequest.call(
+						this,
+						'POST',
+						'/message/reply',
+						{
 							replyToken,
 							messages,
-						},
-						json: true,
-					});
+						}
+					);
 
 					returnData.push({
 						json: { success: true, response: responseData },
