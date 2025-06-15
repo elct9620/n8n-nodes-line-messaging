@@ -5,28 +5,23 @@ import type {
 	INodeTypeDescription,
 } from 'n8n-workflow';
 import { NodeConnectionType } from 'n8n-workflow';
+import { Message, MessageType } from '../../types/Message';
 
-export class LineMessaging implements INodeType {
+export class LineMessage implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Line Messaging',
-		name: 'lineMessaging',
+		displayName: 'Line Message Builder',
+		name: 'lineMessage',
 		icon: 'file:line.svg',
 		group: ['output'],
 		version: [1],
-		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Sends messages to Line Messaging API',
+		subtitle: '={{$parameter["messageType"]}}',
+		description: 'Builds messages for Line Messaging API',
 		defaults: {
-			name: 'Line Messaging',
+			name: 'Line Message Builder',
 		},
 		usableAsTool: true,
 		inputs: [NodeConnectionType.Main],
 		outputs: [NodeConnectionType.Main],
-		credentials: [
-			{
-				name: 'lineMessagingApi',
-				required: true,
-			},
-		],
 		properties: [
 			{
 				displayName: 'Message Type',
@@ -37,7 +32,7 @@ export class LineMessaging implements INodeType {
 				options: [
 					{
 						name: 'Text Message (V2)',
-						value: 'textV2',
+						value: MessageType.TextV2,
 					},
 				],
 			},
@@ -71,7 +66,7 @@ export class LineMessaging implements INodeType {
 					'The quote token to use for replying to a message. If not provided, the message will be sent as a new message.',
 				displayOptions: {
 					show: {
-						messageType: ['textV2'],
+						messageType: [MessageType.TextV2],
 					},
 				},
 			},
@@ -88,7 +83,7 @@ export class LineMessaging implements INodeType {
 				description: 'The text message to send',
 				displayOptions: {
 					show: {
-						messageType: ['textV2'],
+						messageType: [MessageType.TextV2],
 					},
 				},
 			},
@@ -96,6 +91,24 @@ export class LineMessaging implements INodeType {
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
-		return [];
+		const messages: Message[] = [];
+
+		const type = this.getNodeParameter('messageType', 0) as MessageType;
+		const items: INodeExecutionData[] = this.getInputData();
+
+		for (let i = 0; i < items.length; i++) {
+			let message: Message;
+
+			if (type === MessageType.TextV2) {
+				message = {
+					type: MessageType.TextV2,
+					text: this.getNodeParameter('text', i) as string,
+					quoteToken: this.getNodeParameter('quoteToken', i, null) as string,
+				} as Message;
+				messages.push(message);
+			}
+		}
+
+		return [messages as any as INodeExecutionData[]];
 	}
 }

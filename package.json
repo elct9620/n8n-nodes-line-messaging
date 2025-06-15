@@ -35,7 +35,9 @@
 			"dist/credentials/LineMessagingApi.credentials.js"
 		],
 		"nodes": [
-			"dist/nodes/LineMessaging/LineMessagingTrigger.node.js"
+			"dist/nodes/LineMessaging/LineMessaging.node.js",
+			"dist/nodes/LineMessaging/LineMessagingTrigger.node.js",
+			"dist/nodes/LineMessage/LineMessage.node.js"
 		]
 	},
 	"devDependencies": {

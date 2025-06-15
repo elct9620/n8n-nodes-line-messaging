@@ -6,7 +6,7 @@ import type {
 } from 'n8n-workflow';
 import { NodeConnectionType } from 'n8n-workflow';
 import { verifySignature } from './GenericFunctions';
-import { EventType, IEvent, type IWebhook } from './IWebhook';
+import { EventType, IEvent, type IWebhook } from '../../types/IWebhook';
 
 export class LineMessagingTrigger implements INodeType {
 	description: INodeTypeDescription = {
