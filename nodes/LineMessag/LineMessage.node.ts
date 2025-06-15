@@ -38,21 +38,6 @@ export class LineMessage implements INodeType {
 			},
 
 			/**
-			 * Reply Token
-			 */
-			{
-				displayName: 'Reply Token',
-				name: 'replyToken',
-				type: 'string',
-				required: true,
-				typeOptions: { password: true },
-				default: '',
-				placeholder: '1234567890',
-				description:
-					'The reply token to use for replying to a message. If not provided, the message will be sent as a new message.',
-			},
-
-			/**
 			 * Quote Token
 			 */
 			{

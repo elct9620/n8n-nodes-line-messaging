@@ -4,7 +4,7 @@ import type {
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
-import { NodeConnectionType } from 'n8n-workflow';
+import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
 
 export class LineMessaging implements INodeType {
 	description: INodeTypeDescription = {
@@ -13,7 +13,7 @@ export class LineMessaging implements INodeType {
 		icon: 'file:line.svg',
 		group: ['output'],
 		version: [1],
-		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
+		subtitle: '={{$parameter["type"]}',
 		description: 'Sends messages to Line Messaging API',
 		defaults: {
 			name: 'Line Messaging',
@@ -29,15 +29,15 @@ export class LineMessaging implements INodeType {
 		],
 		properties: [
 			{
-				displayName: 'Message Type',
-				name: 'messageType',
+				displayName: 'Type',
+				name: 'type',
 				type: 'options',
-				default: 'textV2',
+				default: 'reply',
 				noDataExpression: true,
 				options: [
 					{
-						name: 'Text Message (V2)',
-						value: 'textV2',
+						name: 'Reply',
+						value: 'reply',
 					},
 				],
 			},
@@ -55,47 +55,43 @@ export class LineMessaging implements INodeType {
 				placeholder: '1234567890',
 				description:
 					'The reply token to use for replying to a message. If not provided, the message will be sent as a new message.',
-			},
-
-			/**
-			 * Quote Token
-			 */
-			{
-				displayName: 'Quote Token',
-				name: 'quoteToken',
-				type: 'string',
-				typeOptions: { password: true },
-				default: '',
-				placeholder: '1234567890',
-				description:
-					'The quote token to use for replying to a message. If not provided, the message will be sent as a new message.',
 				displayOptions: {
 					show: {
-						messageType: ['textV2'],
+						type: ['reply'],
 					},
 				},
 			},
 
 			/***
-			 * Text
+			 * Messages
 			 */
 			{
-				displayName: 'Text',
-				name: 'text',
-				type: 'string',
-				default: '',
-				placeholder: 'Hello, world!',
-				description: 'The text message to send',
-				displayOptions: {
-					show: {
-						messageType: ['textV2'],
-					},
-				},
+				displayName: 'Messages',
+				name: 'messages',
+				type: 'collection',
+				default: [],
+				placeholder: 'Add Message',
 			},
 		],
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
-		return [];
+		const credentials = await this.getCredentials('lineMessagingApi');
+		const items = this.getInputData();
+		const returnData: INodeExecutionData[] = [];
+		const type = this.getNodeParameter('type', 0) as string;
+
+		for (let i = 0; i < items.length; i++) {
+			const messages: any[] = this.getNodeParameter('messages', i, []) as any[];
+			const replyToken = this.getNodeParameter('replyToken', i, '') as string;
+
+			if (type === 'reply' && !replyToken) {
+				throw new NodeOperationError(this.getNode(), 'Reply token is required for reply type');
+			}
+
+			// TODO: Implement the actual API call to Line Messaging API
+		}
+
+		return [returnData];
 	}
 }
