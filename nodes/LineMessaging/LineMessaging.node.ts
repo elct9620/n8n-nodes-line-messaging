@@ -3,6 +3,7 @@ import type {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
+	JsonObject,
 } from 'n8n-workflow';
 import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
 
@@ -68,9 +69,47 @@ export class LineMessaging implements INodeType {
 			{
 				displayName: 'Messages',
 				name: 'messages',
-				type: 'collection',
-				default: [],
+				type: 'fixedCollection',
+				typeOptions: {
+					multipleValues: true,
+					sortable: true,
+				},
+				default: {},
 				placeholder: 'Add Message',
+				options: [
+					{
+						name: 'messageValues',
+						displayName: 'Message',
+						values: [
+							{
+								displayName: 'Type',
+								name: 'type',
+								type: 'options',
+								options: [
+									{
+										name: 'Text',
+										value: 'text',
+									},
+								],
+								default: 'text',
+								description: 'Message type',
+							},
+							{
+								displayName: 'Text',
+								name: 'text',
+								type: 'string',
+								default: '',
+								displayOptions: {
+									show: {
+										type: ['text'],
+									},
+								},
+								description: 'Message text',
+								placeholder: 'Hello, user',
+							},
+						],
+					},
+				],
 			},
 		],
 	};
