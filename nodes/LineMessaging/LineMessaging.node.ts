@@ -139,11 +139,9 @@ export class LineMessaging implements INodeType {
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
-		const credentials = await this.getCredentials('lineMessagingApi');
 		const items = this.getInputData();
 		const returnData: INodeExecutionData[] = [];
 		const type = this.getNodeParameter('type', 0) as string;
-
 
 		for (let i = 0; i < items.length; i++) {
 			try {
@@ -164,15 +162,10 @@ export class LineMessaging implements INodeType {
 
 				// Make API call to Line Messaging API
 				if (type === 'reply') {
-					const responseData = await apiRequest.call(
-						this,
-						'POST',
-						'/message/reply',
-						{
-							replyToken,
-							messages,
-						}
-					);
+					const responseData = await apiRequest.call(this, 'POST', '/message/reply', {
+						replyToken,
+						messages,
+					});
 
 					returnData.push({
 						json: { success: true, response: responseData },
