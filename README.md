@@ -1,41 +1,83 @@
 # n8n-nodes-line-messaging
 
-This is an n8n community node. It lets you use _app/service name_ in your n8n workflows.
+This is an n8n community node. It lets you use LINE Messaging API in your n8n workflows.
 
-_App/service name_ is _one or two sentences describing the service this node integrates with_.
+LINE Messaging API enables developers to build chatbots and integrate messaging features into their services with the LINE platform, which is especially popular in Japan, Thailand, Taiwan, and other parts of Asia.
 
 [n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/reference/license/) workflow automation platform.
 
-[Installation](#installation)
-[Operations](#operations)
-[Credentials](#credentials)  <!-- delete if no auth needed -->
-[Compatibility](#compatibility)
-[Usage](#usage)  <!-- delete if not using this section -->
-[Resources](#resources)
+- [Installation](#installation)
+- [Operations](#operations)
+- [Credentials](#credentials)
+- [Compatibility](#compatibility)
+- [Usage](#usage)
+- [Resources](#resources)
 
 ## Installation
 
 Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) in the n8n community nodes documentation.
 
+```bash
+npm install @aotoki/n8n-nodes-line-messaging
+```
+
 ## Operations
 
-_List the operations supported by your node._
+This node provides the following operations:
+
+### Line Messaging Node
+- **Reply**: Reply to a user's message using the replyToken
+
+### Line Messaging Trigger Node
+- **Webhook**: Receive events from LINE Messaging API
 
 ## Credentials
 
-_If users need to authenticate with the app/service, provide details here. You should include prerequisites (such as signing up with the service), available authentication methods, and how to set them up._
+You need to set up a LINE Bot channel in the [LINE Developers Console](https://developers.line.biz/console/) before using this node.
+
+1. Create a new provider and channel in the LINE Developers Console
+2. Enable the Messaging API option
+3. Get your Channel Secret and Channel Access Token from the Basic Settings and Messaging API tabs
+4. Use these credentials when setting up the node in n8n
 
 ## Compatibility
 
-_State the minimum n8n version, as well as which versions you test against. You can also include any known version incompatibility issues._
+- Requires n8n version 1.0.0 or later
+- Built without external dependencies to comply with n8n verified node requirements
 
 ## Usage
 
-_This is an optional section. Use it to help users with any difficult or confusing aspects of the node._
+### Setting up a LINE Bot Webhook
 
-_By the time users are looking for community nodes, they probably already know n8n basics. But if you expect new users, you can link to the [Try it out](https://docs.n8n.io/try-it-out/) documentation to help them get started._
+1. Create a workflow with the LINE Messaging Trigger node
+2. Configure the node to listen for the events you're interested in
+3. Copy the webhook URL from the trigger node
+4. Set this URL as your webhook URL in the LINE Developers Console
+5. Add a verification step in your workflow to validate the signature using the Channel Secret
+
+### Responding to Messages
+
+1. When a message is received, your workflow will be triggered
+2. You can access the `replyToken` from the trigger output
+3. Use the LINE Messaging node with the "Reply" operation to send a response
+4. Set the reply token and add the messages you want to send
+
+### Example: Simple Echo Bot
+
+This example workflow receives messages and echoes them back to the user:
+
+1. Add a LINE Messaging Trigger node and configure it to listen for "message" events
+2. Add a LINE Messaging node configured to "Reply"
+3. Set the "Reply Token" field to use the replyToken from the trigger output: `{{$json.replyToken}}`
+4. Add a text message with the content: `You said: {{$json.message.text}}`
+
+## Limitations
+
+- Currently, only simple text messages are supported due to n8n's UI limitations with complex JSON schemas
+- This node is written without external dependencies to meet n8n verified node requirements
 
 ## Resources
 
-* [n8n community nodes documentation](https://docs.n8n.io/integrations/#community-nodes)
-* _Link to app/service documentation._
+* [n8n community nodes documentation](https://docs.n8n.io/integrations/community-nodes/)
+* [LINE Messaging API documentation](https://developers.line.biz/en/docs/messaging-api/)
+* [LINE Bot Designer](https://developers.line.biz/en/services/bot-designer/)
