@@ -6,7 +6,7 @@ import type {
 } from 'n8n-workflow';
 import { NodeConnectionType } from 'n8n-workflow';
 import { verifySignature } from './GenericFunctions';
-import type { IWebhook } from './IWebhook';
+import { EventType, IEvent, type IWebhook } from './IWebhook';
 
 export class LineMessagingTrigger implements INodeType {
 	description: INodeTypeDescription = {
@@ -16,7 +16,7 @@ export class LineMessagingTrigger implements INodeType {
 		group: ['trigger'],
 		version: [1],
 		defaultVersion: 1,
-		subtitle: '=Updates: {{$parameter["updates"].join(", ")}}',
+		subtitle: '=Events: {{$parameter["events"].join(", ")}}',
 		description: 'Starts the workflow on a Line Messaging update',
 		defaults: {
 			name: 'Line Messaging Trigger',
@@ -37,7 +37,26 @@ export class LineMessagingTrigger implements INodeType {
 				path: 'webhook',
 			},
 		],
-		properties: [],
+		properties: [
+			{
+				displayName: 'Trigger On',
+				name: 'events',
+				type: 'multiOptions',
+				default: [],
+				options: [
+					{
+						name: 'All',
+						value: '*',
+						description: 'Trigger on all events',
+					},
+					...Object.values(EventType).map((event) => ({
+						name: event.charAt(0).toUpperCase() + event.slice(1),
+						value: event,
+						description: `Trigger on ${event} events`,
+					})),
+				],
+			},
+		],
 	};
 
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
@@ -57,8 +76,14 @@ export class LineMessagingTrigger implements INodeType {
 			};
 		}
 
+		const desiredEvents = this.getNodeParameter('events', []) as string[];
+		const events: IEvent[] = [];
+
+		// TODO: Filter events based on user selection
+		// If '*' is selected, all events are included
+
 		return {
-			workflowData: [this.helpers.returnJsonArray(bodyData.events)],
+			workflowData: [this.helpers.returnJsonArray(events)],
 		};
 	}
 }
