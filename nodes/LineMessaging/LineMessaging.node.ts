@@ -120,15 +120,71 @@ export class LineMessaging implements INodeType {
 		const returnData: INodeExecutionData[] = [];
 		const type = this.getNodeParameter('type', 0) as string;
 
+		const channelAccessToken = credentials.channelAccessToken as string;
+
 		for (let i = 0; i < items.length; i++) {
-			const messages: any[] = this.getNodeParameter('messages', i, []) as any[];
-			const replyToken = this.getNodeParameter('replyToken', i, '') as string;
+			try {
+				const messagesCollection = this.getNodeParameter('messages', i, { messageValues: [] }) as {
+					messageValues?: Array<{
+						type: string;
+						text?: string;
+					}>;
+				};
+				
+				const messages = messagesCollection.messageValues || [];
+				const replyToken = this.getNodeParameter('replyToken', i, '') as string;
 
-			if (type === 'reply' && !replyToken) {
-				throw new NodeOperationError(this.getNode(), 'Reply token is required for reply type');
+				if (type === 'reply' && !replyToken) {
+					throw new NodeOperationError(this.getNode(), 'Reply token is required for reply type');
+				}
+
+				if (messages.length === 0) {
+					throw new NodeOperationError(this.getNode(), 'At least one message is required');
+				}
+
+				// Format the messages for the LINE API
+				const formattedMessages = messages.map((message) => {
+					if (message.type === 'text') {
+						return {
+							type: 'text',
+							text: message.text,
+						};
+					}
+					return null;
+				}).filter(Boolean);
+
+				// Make API call to Line Messaging API
+				if (type === 'reply') {
+					const responseData = await this.helpers.request({
+						method: 'POST',
+						url: 'https://api.line.me/v2/bot/message/reply',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${channelAccessToken}`,
+						},
+						body: {
+							replyToken: replyToken,
+							messages: formattedMessages,
+						},
+						json: true,
+					});
+					
+					returnData.push({
+						json: { success: true, response: responseData },
+					});
+				}
+			} catch (error) {
+				if (this.continueOnFail()) {
+					returnData.push({
+						json: {
+							success: false,
+							error: (error as JsonObject).message,
+						},
+					});
+					continue;
+				}
+				throw error;
 			}
-
-			// TODO: Implement the actual API call to Line Messaging API
 		}
 
 		return [returnData];
