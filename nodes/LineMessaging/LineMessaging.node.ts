@@ -131,6 +131,62 @@ export class LineMessaging implements INodeType {
 									},
 								},
 							},
+
+							/**
+							 * Quick Reply
+							 */
+							{
+								displayName: 'Quick Reply',
+								name: 'quickReply',
+								type: 'fixedCollection',
+								typeOptions: {
+									multipleValues: true,
+									sortable: true,
+								},
+								default: {},
+								placeholder: 'Add Quick Reply',
+								options: [
+									{
+										displayName: 'Quick Reply Item',
+										name: 'items',
+										values: [
+											{
+												displayName: 'Label',
+												name: 'label',
+												type: 'string',
+												default: '',
+												placeholder: 'Quick Reply',
+												description: 'The label for the quick reply item',
+											},
+											{
+												displayName: 'Action Type',
+												name: 'actionType',
+												type: 'options',
+												default: 'postback',
+												options: [
+													{
+														name: 'Postback',
+														value: 'postback',
+													},
+													{
+														name: 'Message',
+														value: 'message',
+													},
+												],
+											},
+											{
+												displayName: 'Data',
+												name: 'data',
+												type: 'string',
+												default: '',
+												placeholder: '{"key":"value"}',
+												description:
+													'The data to send with the quick reply action. Format depends on action type.',
+											},
+										],
+									},
+								],
+							},
 						],
 					},
 				],
@@ -145,9 +201,9 @@ export class LineMessaging implements INodeType {
 
 		for (let i = 0; i < items.length; i++) {
 			try {
-				const messagesCollection = this.getNodeParameter('messages', i, { values: [] }) as {
-					values?: Array<Message>;
-				};
+				const messagesCollection = this.getNodeParameter('messages', i, {
+					values: [],
+				}) as { values: Message[] };
 
 				const messages = messagesCollection.values || [];
 				const replyToken = this.getNodeParameter('replyToken', i, '') as string;
