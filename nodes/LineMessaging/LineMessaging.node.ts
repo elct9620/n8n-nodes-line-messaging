@@ -8,6 +8,7 @@ import type {
 import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
 import { Message, MessageType } from './Message';
 import { apiRequest } from './GenericFunctions';
+import { MessageFactory } from './Factory';
 
 export class LineMessaging implements INodeType {
 	description: INodeTypeDescription = {
@@ -203,9 +204,12 @@ export class LineMessaging implements INodeType {
 			try {
 				const messagesCollection = this.getNodeParameter('messages', i, {
 					values: [],
-				}) as { values: Message[] };
-
-				const messages = messagesCollection.values || [];
+				}) as { values: IDataObject[] };
+				
+				// Transform the input parameters into LINE API compatible messages
+				const messages = (messagesCollection.values || []).map((params) => 
+					MessageFactory.createMessage(params)
+				);
 				const replyToken = this.getNodeParameter('replyToken', i, '') as string;
 
 				if (type === 'reply' && !replyToken) {
