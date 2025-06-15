@@ -77,10 +77,16 @@ export class LineMessagingTrigger implements INodeType {
 		}
 
 		const desiredEvents = this.getNodeParameter('events', []) as string[];
-		const events: IEvent[] = [];
+		let events: IEvent[] = [];
 
-		// TODO: Filter events based on user selection
-		// If '*' is selected, all events are included
+		// Filter events based on user selection
+		if (desiredEvents.includes('*')) {
+			// If '*' is selected, include all events
+			events = bodyData.events;
+		} else if (desiredEvents.length > 0) {
+			// Otherwise, only include selected event types
+			events = bodyData.events.filter((event) => desiredEvents.includes(event.type));
+		}
 
 		return {
 			workflowData: [this.helpers.returnJsonArray(events)],
