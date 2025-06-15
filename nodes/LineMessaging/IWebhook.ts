@@ -120,20 +120,20 @@ type LocationMessage = {
 };
 
 type MessageEvent = {
-	type: 'message';
+	type: EventType.Message;
 	replyToken: string;
 	message: TextMessage | ImageMessage | VideoMessage | AudioMessage | FileMessage | LocationMessage;
 };
 
 type UnsendEvent = {
-	type: 'unsend';
+	type: EventType.Unsend;
 	unsend: {
 		messageId: string;
 	};
 };
 
 type FollowEvent = {
-	type: 'follow';
+	type: EventType.Follow;
 	replyToken: string;
 	follow: {
 		isUnblocked: boolean;
@@ -141,20 +141,20 @@ type FollowEvent = {
 };
 
 type UnfollowEvent = {
-	type: 'unfollow';
+	type: EventType.Unfollow;
 };
 
 type JoinEvent = {
-	type: 'join';
+	type: EventType.Join;
 	replyToken: string;
 };
 
 type LeaveEvent = {
-	type: 'leave';
+	type: EventType.Leave;
 };
 
 type MemberJoinedEvent = {
-	type: 'memberJoined';
+	type: EventType.MemberJoined;
 	replyToken: string;
 	joined: {
 		members: Array<SourceUser>;
@@ -162,7 +162,7 @@ type MemberJoinedEvent = {
 };
 
 type MemberLeftEvent = {
-	type: 'memberLeft';
+	type: EventType.MemberLeft;
 	left: {
 		members: Array<SourceUser>;
 	};
@@ -190,13 +190,13 @@ type Postback = {
 };
 
 type PostbackEvent = {
-	type: 'postback';
+	type: EventType.Postback;
 	replyToken: string;
 	postback: Postback;
 };
 
 type VideoPlayCompleteEvent = {
-	type: 'videoPlayComplete';
+	type: EventType.VideoPlayComplete;
 	replyToken: string;
 	videoPlayComplete: {
 		trackingId: string;
@@ -204,7 +204,7 @@ type VideoPlayCompleteEvent = {
 };
 
 type BeaconEvent = {
-	type: 'beacon';
+	type: EventType.Beacon;
 	replyToken: string;
 	beacon: {
 		hwid: string; // Hardware ID
@@ -214,7 +214,7 @@ type BeaconEvent = {
 };
 
 type AccountLinkEvent = {
-	type: 'accountLink';
+	type: EventType.AccountLink;
 	replyToken: string;
 	link: {
 		result: 'ok' | 'failed'; // Result of the account link
@@ -223,13 +223,29 @@ type AccountLinkEvent = {
 };
 
 type MembershipEvent = {
-	type: 'membership';
+	type: EventType.Membership;
 	replyToken: string;
 	membership: {
 		type: 'joined' | 'left' | 'renewed'; // Type of membership event
 		membershipId: string; // Unique ID for the membership
 	};
 };
+
+export enum EventType {
+	Message = 'message',
+	Unsend = 'unsend',
+	Follow = 'follow',
+	Unfollow = 'unfollow',
+	Join = 'join',
+	Leave = 'leave',
+	MemberJoined = 'memberJoined',
+	MemberLeft = 'memberLeft',
+	Postback = 'postback',
+	VideoPlayComplete = 'videoPlayComplete',
+	Beacon = 'beacon',
+	AccountLink = 'accountLink',
+	Membership = 'membership'
+}
 
 type EventBody =
 	| MessageEvent
