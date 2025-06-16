@@ -11,16 +11,17 @@ import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
 import { apiDataRequest } from '../LineMessaging/GenericFunctions';
 import { getFileExtension } from './utils';
 
-export class LineMessagingContent implements INodeType {
+export class LineMessagingData implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Line Messaging Get Content',
-		name: 'lineMessagingContent',
+		displayName: 'Line Messaging Data',
+		name: 'lineMessagingData',
 		icon: 'file:../LineMessaging/line.svg',
 		group: ['output'],
 		version: [1],
-		description: 'Retrieves content from Line Messaging API',
+		subtitle: '={{$parameter["operation"]}}',
+		description: 'Send and receive large amounts of data with Line Messaging API',
 		defaults: {
-			name: 'Line Messaging Get Content',
+			name: 'Line Messaging Data',
 		},
 		usableAsTool: true,
 		inputs: [NodeConnectionType.Main],
@@ -33,6 +34,21 @@ export class LineMessagingContent implements INodeType {
 		],
 		properties: [
 			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				default: 'getContent',
+				options: [
+					{
+						name: 'Get Content',
+						value: 'getContent',
+						description: 'Retrieve content of a message by its ID',
+						action: 'Retrieve content of a message by its ID',
+					},
+				],
+			},
+			{
 				displayName: 'Message ID',
 				name: 'messageId',
 				type: 'string',
@@ -40,6 +56,11 @@ export class LineMessagingContent implements INodeType {
 				required: true,
 				placeholder: '1234567890',
 				description: 'The ID of the message to retrieve content from',
+				displayOptions: {
+					show: {
+						operation: ['getContent'],
+					},
+				},
 			},
 			{
 				displayName: 'Binary Property',
@@ -48,6 +69,11 @@ export class LineMessagingContent implements INodeType {
 				default: 'data',
 				required: true,
 				description: 'The binary property to which to write the data to',
+				displayOptions: {
+					show: {
+						operation: ['getContent'],
+					},
+				},
 			},
 			{
 				displayName: 'Additional Options',
@@ -79,6 +105,11 @@ export class LineMessagingContent implements INodeType {
 						description: 'How long to wait between retries in seconds',
 					},
 				],
+				displayOptions: {
+					show: {
+						operation: ['getContent'],
+					},
+				},
 			},
 		],
 	};
