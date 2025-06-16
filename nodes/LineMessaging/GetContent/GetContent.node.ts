@@ -86,23 +86,21 @@ export class GetContent implements INodeType {
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
 		const returnData: INodeExecutionData[] = [];
-		const credentials = await this.getCredentials('lineMessagingApi');
-		const channelAccessToken = credentials.accessToken as string;
 
 		for (let i = 0; i < items.length; i++) {
 			try {
 				const messageId = this.getNodeParameter('messageId', i) as string;
 				const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
 				const additionalOptions = this.getNodeParameter('additionalOptions', i, {}) as IDataObject;
-				
+
 				// Check if we should check transcoding status first
 				if (additionalOptions.checkTranscoding === true) {
 					const retryCount = (additionalOptions.retryCount as number) || 3;
 					const retryInterval = ((additionalOptions.retryInterval as number) || 3) * 1000;
-					
+
 					let transcodingStatus: string = 'processing';
 					let currentRetry = 0;
-					
+
 					while (transcodingStatus === 'processing' && currentRetry < retryCount) {
 						// Check transcoding status
 						const response = await apiRequest.call(
@@ -111,18 +109,18 @@ export class GetContent implements INodeType {
 							`/message/${messageId}/content/transcoding`,
 							{},
 						);
-						
+
 						transcodingStatus = response.status as string;
-						
+
 						if (transcodingStatus === 'processing') {
 							// Wait before retrying
-							await new Promise(resolve => setTimeout(resolve, retryInterval));
+							await new Promise((resolve) => setTimeout(resolve, retryInterval));
 							currentRetry++;
 						} else if (transcodingStatus === 'failed') {
 							throw new NodeOperationError(this.getNode(), 'Content transcoding failed');
 						}
 					}
-					
+
 					if (transcodingStatus === 'processing') {
 						throw new NodeOperationError(
 							this.getNode(),
@@ -130,7 +128,7 @@ export class GetContent implements INodeType {
 						);
 					}
 				}
-				
+
 				// Request content using apiRequest with custom options for binary data
 				const response = await apiRequest.call(
 					this,
@@ -143,9 +141,9 @@ export class GetContent implements INodeType {
 						json: false,
 						resolveWithFullResponse: true,
 						baseURL: 'https://api-data.line.me/v2/bot', // Override base URL for content API
-					}
+					},
 				);
-				
+
 				const contentType = response.headers['content-type'];
 				const fileExtension = getFileExtension(contentType);
 				const fileName = `line_content_${messageId}${fileExtension}`;
@@ -186,5 +184,4 @@ export class GetContent implements INodeType {
 
 		return [returnData];
 	}
-
 }
