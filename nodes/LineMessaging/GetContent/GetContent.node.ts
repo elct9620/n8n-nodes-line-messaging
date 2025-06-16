@@ -41,6 +41,10 @@ export class GetContent implements INodeType {
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const returnData: INodeExecutionData[] = [];
 
+		// TODO: Implement the logic to retrieve content from Line Messaging API
+		// Create `IBinaryData` object to hold the content
+		// Set mimetype from the content type
+
 		return [returnData];
 	}
 }
