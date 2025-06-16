@@ -130,19 +130,20 @@ export class GetContent implements INodeType {
 					}
 				}
 				
-				// Request content
-				const options = {
-					method: 'GET',
-					headers: {
-						Authorization: `Bearer ${channelAccessToken}`,
-					},
-					uri: `https://api-data.line.me/v2/bot/message/${messageId}/content`,
-					encoding: null, // Important: This ensures the body is a Buffer
-					json: false,
-					resolveWithFullResponse: true,
-				};
-
-				const response = await this.helpers.request(options);
+				// Request content using apiRequest with custom options for binary data
+				const response = await apiRequest.call(
+					this,
+					'GET',
+					`/message/${messageId}/content`,
+					{},
+					{},
+					{
+						encoding: null, // Important: This ensures the body is a Buffer
+						json: false,
+						resolveWithFullResponse: true,
+						baseURL: 'https://api-data.line.me/v2/bot', // Override base URL for content API
+					}
+				);
 				
 				const contentType = response.headers['content-type'];
 				const fileExtension = this.getFileExtension(contentType);
