@@ -8,7 +8,7 @@ import type {
 	JsonObject,
 } from 'n8n-workflow';
 import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
-import { apiRequest } from '../GenericFunctions';
+import { apiDataRequest } from '../GenericFunctions';
 import { getFileExtension } from '../utils';
 
 export class GetContent implements INodeType {
@@ -103,7 +103,7 @@ export class GetContent implements INodeType {
 
 					while (transcodingStatus === 'processing' && currentRetry < retryCount) {
 						// Check transcoding status
-						const response = await apiRequest.call(
+						const response = await apiDataRequest.call(
 							this,
 							'GET',
 							`/message/${messageId}/content/transcoding`,
@@ -129,8 +129,8 @@ export class GetContent implements INodeType {
 					}
 				}
 
-				// Request content using apiRequest with custom options for binary data
-				const response = await apiRequest.call(
+				// Request content using apiDataRequest with custom options for binary data
+				const response = await apiDataRequest.call(
 					this,
 					'GET',
 					`/message/${messageId}/content`,
@@ -140,7 +140,6 @@ export class GetContent implements INodeType {
 						encoding: null, // Important: This ensures the body is a Buffer
 						json: false,
 						resolveWithFullResponse: true,
-						baseURL: 'https://api-data.line.me/v2/bot', // Override base URL for content API
 					},
 				);
 
