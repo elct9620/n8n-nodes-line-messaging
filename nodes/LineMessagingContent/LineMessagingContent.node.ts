@@ -8,19 +8,19 @@ import type {
 	JsonObject,
 } from 'n8n-workflow';
 import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
-import { apiDataRequest } from '../GenericFunctions';
-import { getFileExtension } from '../utils';
+import { apiDataRequest } from '../LineMessaging/GenericFunctions';
+import { getFileExtension } from './utils';
 
-export class GetContent implements INodeType {
+export class LineMessagingContent implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Line Messaging Content',
-		name: 'getContent',
-		icon: 'file:../line.svg',
+		displayName: 'Line Messaging Get Content',
+		name: 'lineMessagingContent',
+		icon: 'file:../LineMessaging/line.svg',
 		group: ['output'],
 		version: [1],
 		description: 'Retrieves content from Line Messaging API',
 		defaults: {
-			name: 'Line Messaging Content',
+			name: 'Line Messaging Get Content',
 		},
 		usableAsTool: true,
 		inputs: [NodeConnectionType.Main],
