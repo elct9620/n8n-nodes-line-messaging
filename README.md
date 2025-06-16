@@ -28,6 +28,9 @@ This node provides the following operations:
 ### Line Messaging Node
 - **Reply**: Reply to a user's message using the replyToken
 
+### Line Messaging Data Node
+- **Get Content**: Retrieve content (images, videos, audio, files) from message IDs
+
 ### Line Messaging Trigger Node
 - **Webhook**: Receive events from LINE Messaging API
 
@@ -62,6 +65,13 @@ You need to set up a LINE Bot channel in the [LINE Developers Console](https://d
 3. Use the LINE Messaging node with the "Reply" operation to send a response
 4. Set the reply token and add the messages you want to send
 
+### Retrieving Media Content
+
+1. When a media message (image, video, audio, file) is received, you get a message ID
+2. Use the LINE Messaging Data node with the "Get Content" operation
+3. Provide the message ID to download the content as binary data
+4. The content can then be processed, saved, or sent to other services
+
 ### Example: Simple Echo Bot
 
 This example workflow receives messages and echoes them back to the user:
@@ -73,7 +83,8 @@ This example workflow receives messages and echoes them back to the user:
 
 ## Limitations
 
-- Currently, only simple text messages are supported due to n8n's UI limitations with complex JSON schemas
+- Currently, only simple text messages are supported for sending due to n8n's UI limitations with complex JSON schemas
+- Media content retrieval is fully supported for images, videos, audio files, and other content types
 - This node is written without external dependencies to meet n8n verified node requirements
 
 ## Resources
