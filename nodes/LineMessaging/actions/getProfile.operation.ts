@@ -16,6 +16,11 @@ export const properties: INodeProperties[] = [
 		required: true,
 		placeholder: 'U4af4980629...',
 		description: 'The ID of the user whose profile you want to retrieve',
+		displayOptions: {
+			show: {
+				'/operation': ['getProfile'],
+			},
+		},
 	},
 ];
 

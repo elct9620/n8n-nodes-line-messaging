@@ -24,6 +24,11 @@ export const properties: INodeProperties[] = [
 		placeholder: '1234567890',
 		description:
 			'The reply token to use for replying to a message. If not provided, the message will be sent as a new message.',
+		displayOptions: {
+			show: {
+				'/operation': ['reply'],
+			},
+		},
 	},
 
 	/***
@@ -39,6 +44,11 @@ export const properties: INodeProperties[] = [
 		},
 		default: {},
 		placeholder: 'Add Message',
+		displayOptions: {
+			show: {
+				'/operation': ['reply'],
+			},
+		},
 		options: [
 			{
 				displayName: 'Message',
