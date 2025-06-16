@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.5.0](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.4.0...v0.5.0) (2025-06-16)
+
+
+### Features
+
+* add getProfile operation to LineMessaging node for user profile retrieval ([eec7d44](https://github.com/elct9620/n8n-nodes-line-messaging/commit/eec7d44de12b26b923ea061b0882a3349cb8e370))
+
+
+### Bug Fixes
+
+* add displayOptions to show properties for selected operation only ([82a1e3c](https://github.com/elct9620/n8n-nodes-line-messaging/commit/82a1e3c9e7ca0c2567060f409e9f2e502a5b5b5c))
+* update displayOptions to use 'operation' instead of '/operation' ([54cda43](https://github.com/elct9620/n8n-nodes-line-messaging/commit/54cda43c0b17f95fa4cd899486d818a569a4347b))
+
 ## [0.4.0](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.3.0...v0.4.0) (2025-06-16)
 
 
