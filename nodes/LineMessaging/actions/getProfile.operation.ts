@@ -18,7 +18,7 @@ export const properties: INodeProperties[] = [
 		description: 'The ID of the user whose profile you want to retrieve',
 		displayOptions: {
 			show: {
-				'/operation': ['getProfile'],
+				operation: ['getProfile'],
 			},
 		},
 	},
@@ -34,7 +34,10 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 			const userId = this.getNodeParameter('userId', i) as string;
 
 			if (!userId) {
-				throw new NodeOperationError(this.getNode(), 'User ID is required for getProfile operation');
+				throw new NodeOperationError(
+					this.getNode(),
+					'User ID is required for getProfile operation',
+				);
 			}
 
 			// Make API call to Line Messaging API to get profile
