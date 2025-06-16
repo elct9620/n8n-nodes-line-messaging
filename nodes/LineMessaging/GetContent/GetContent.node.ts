@@ -9,6 +9,7 @@ import type {
 } from 'n8n-workflow';
 import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
 import { apiRequest } from '../GenericFunctions';
+import { getFileExtension } from '../utils';
 
 export class GetContent implements INodeType {
 	description: INodeTypeDescription = {
@@ -146,7 +147,7 @@ export class GetContent implements INodeType {
 				);
 				
 				const contentType = response.headers['content-type'];
-				const fileExtension = this.getFileExtension(contentType);
+				const fileExtension = getFileExtension(contentType);
 				const fileName = `line_content_${messageId}${fileExtension}`;
 
 				// Create binary data
@@ -186,21 +187,4 @@ export class GetContent implements INodeType {
 		return [returnData];
 	}
 
-	/**
-	 * Determine file extension from content type
-	 */
-	private getFileExtension(contentType: string): string {
-		const mimeTypeMap: { [key: string]: string } = {
-			'image/jpeg': '.jpg',
-			'image/png': '.png',
-			'image/gif': '.gif',
-			'video/mp4': '.mp4',
-			'audio/mp4': '.m4a',
-			'audio/aac': '.aac',
-			'application/pdf': '.pdf',
-			'application/octet-stream': '.bin',
-		};
-
-		return mimeTypeMap[contentType] || '';
-	}
 }
