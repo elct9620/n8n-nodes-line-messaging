@@ -1,5 +1,3 @@
-import type { IDataObject } from 'n8n-workflow';
-
 /**
  * Determine file extension from content type
  */
