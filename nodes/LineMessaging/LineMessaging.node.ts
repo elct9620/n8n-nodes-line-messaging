@@ -7,6 +7,7 @@ import type {
 import { NodeConnectionType } from 'n8n-workflow';
 
 import * as reply from './actions/reply.operation';
+import * as getProfile from './actions/getProfile.operation';
 
 export class LineMessaging implements INodeType {
 	description: INodeTypeDescription = {
@@ -38,6 +39,12 @@ export class LineMessaging implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
+						name: 'Get Profile',
+						value: 'getProfile',
+						description: 'Retrieve profile information of a user',
+						action: 'Retrieve profile information of a user',
+					},
+					{
 						name: 'Reply',
 						value: 'reply',
 						description: 'Reply to a message using a reply token',
@@ -45,7 +52,11 @@ export class LineMessaging implements INodeType {
 					},
 				],
 			},
+			// Reply operation properties
 			...reply.description,
+			
+			// Get Profile operation properties
+			...getProfile.description,
 		],
 	};
 
@@ -56,6 +67,8 @@ export class LineMessaging implements INodeType {
 
 		if (operation === 'reply') {
 			returnData = await reply.execute.call(this, items);
+		} else if (operation === 'getProfile') {
+			returnData = await getProfile.execute.call(this, items);
 		}
 
 		return [returnData];
