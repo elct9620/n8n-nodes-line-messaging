@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.2.0...v0.3.0) (2025-06-16)
+
+
+### Miscellaneous Chores
+
+* release 0.3.0 ([189935e](https://github.com/elct9620/n8n-nodes-line-messaging/commit/189935e8fe4ddbff648687055837f7988e638532))
+
 ## [0.2.0](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.1.1...v0.2.0) (2025-06-16)
 
 
