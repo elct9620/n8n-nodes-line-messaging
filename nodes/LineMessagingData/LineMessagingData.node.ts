@@ -8,7 +8,7 @@ import type {
 	JsonObject,
 } from 'n8n-workflow';
 import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
-import { apiDataRequest } from '../LineMessaging/GenericFunctions';
+import { apiDataRequest } from './GenericFunctions';
 import { getFileExtension } from './utils';
 
 export class LineMessagingData implements INodeType {
