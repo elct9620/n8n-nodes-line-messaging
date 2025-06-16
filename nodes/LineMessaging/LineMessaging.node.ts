@@ -15,8 +15,8 @@ export class LineMessaging implements INodeType {
 		icon: 'file:line.svg',
 		group: ['output'],
 		version: [1],
-		subtitle: '={{$parameter["type"]}',
-		description: 'Sends messages to Line Messaging API',
+		subtitle: '={{$parameter["operation"]}}',
+		description: 'Interact with the Line Messaging API',
 		defaults: {
 			name: 'Line Messaging',
 		},
