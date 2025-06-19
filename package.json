@@ -28,7 +28,6 @@
 		"name": "Aotokitsuruya"
 	},
 	"license": "MIT",
-	"packageManager": "pnpm@10.11.1",
 	"n8n": {
 		"n8nNodesApiVersion": 1,
 		"credentials": [
