@@ -9,6 +9,7 @@ import { NodeConnectionType } from 'n8n-workflow';
 import * as reply from './actions/reply.operation';
 import * as getProfile from './actions/getProfile.operation';
 import * as send from './actions/send.operation';
+import * as multicast from './actions/multicast.operation';
 
 export class LineMessaging implements INodeType {
 	description: INodeTypeDescription = {
@@ -46,6 +47,12 @@ export class LineMessaging implements INodeType {
 						action: 'Retrieve profile information of a user',
 					},
 					{
+						name: 'Multicast',
+						value: 'multicast',
+						description: 'Send a message to multiple users',
+						action: 'Send a message to multiple users',
+					},
+					{
 						name: 'Reply',
 						value: 'reply',
 						description: 'Reply to a message using a reply token',
@@ -65,6 +72,9 @@ export class LineMessaging implements INodeType {
 			// Send operation properties
 			...send.description,
 
+			// Multicast operation properties
+			...multicast.description,
+
 			// Get Profile operation properties
 			...getProfile.description,
 		],
@@ -79,6 +89,8 @@ export class LineMessaging implements INodeType {
 			returnData = await reply.execute.call(this, items);
 		} else if (operation === 'send') {
 			returnData = await send.execute.call(this, items);
+		} else if (operation === 'multicast') {
+			returnData = await multicast.execute.call(this, items);
 		} else if (operation === 'getProfile') {
 			returnData = await getProfile.execute.call(this, items);
 		}
