@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is an n8n community node package for LINE Messaging API integration. It consists of three main nodes:
 
-- **LineMessaging** (`nodes/LineMessaging/`): Main node for sending messages and getting user profiles
+- **LineMessaging** (`nodes/LineMessaging/`): Main node for sending messages (reply/send), getting user profiles
 - **LineMessagingData** (`nodes/LineMessagingData/`): Node for retrieving content (images, videos, audio, files) from messages
 - **LineMessagingTrigger** (`nodes/LineMessaging/LineMessagingTrigger.node.ts`): Webhook trigger for receiving LINE events
 
@@ -29,6 +29,17 @@ pnpm lintfix
 # Pre-publish (build + lint with stricter rules)
 pnpm prepublish
 ```
+
+## Code Quality Workflow
+
+**IMPORTANT**: Always verify code quality before committing changes:
+
+1. **Format code**: Run `pnpm format` to ensure Prettier formatting
+2. **Lint code**: Run `pnpm lint` to verify ESLint rules compliance
+3. **Build verification**: Run `pnpm build` to confirm TypeScript compilation
+4. **Fix issues**: Address any formatting or linting errors before committing
+
+This ensures all contributions maintain project standards and follow n8n community node conventions.
 
 ## Architecture
 
@@ -61,6 +72,19 @@ Operations are structured as separate modules in `actions/` folders:
 - Authentication via Bearer token (Channel Access Token)
 - No external dependencies - built using only n8n-workflow types and Node.js built-ins
 - API calls implemented in GenericFunctions.ts modules
+
+### Available Operations
+
+**LineMessaging Node:**
+- **Reply**: Respond to user messages using reply tokens (POST /message/reply)
+- **Send**: Proactively send messages to users using User IDs (POST /message/push)
+- **Get Profile**: Retrieve user profile information (GET /profile/{userId})
+
+**LineMessagingData Node:**
+- **Get Content**: Retrieve message content like images, videos, audio files
+
+**LineMessagingTrigger Node:**
+- **Webhook**: Receive and process LINE webhook events
 
 ## Linting Rules
 
