@@ -28,6 +28,8 @@ This node provides the following operations:
 ### Line Messaging Node
 
 - **Reply**: Reply to a user's message using the replyToken
+- **Send**: Proactively send messages to users using their User ID
+- **Get Profile**: Retrieve user profile information
 
 ### Line Messaging Data Node
 
@@ -68,6 +70,19 @@ You need to set up a LINE Bot channel in the [LINE Developers Console](https://d
 3. Use the LINE Messaging node with the "Reply" operation to send a response
 4. Set the reply token and add the messages you want to send
 
+### Sending Proactive Messages
+
+1. Use the LINE Messaging node with the "Send" operation
+2. Provide the User ID of the recipient (format: U1234567890abcdef...)
+3. Add the messages you want to send
+4. This allows sending messages without waiting for user interaction
+
+### Getting User Profiles
+
+1. Use the LINE Messaging node with the "Get Profile" operation
+2. Provide the User ID to retrieve profile information
+3. Get user's display name, profile picture, and status message
+
 ### Retrieving Media Content
 
 1. When a media message (image, video, audio, file) is received, you get a message ID
@@ -84,11 +99,15 @@ This example workflow receives messages and echoes them back to the user:
 3. Set the "Reply Token" field to use the replyToken from the trigger output: `{{$json.replyToken}}`
 4. Add a text message with the content: `You said: {{$json.message.text}}`
 
-## Limitations
+## Features
 
-- Currently, only simple text messages are supported for sending due to n8n's UI limitations with complex JSON schemas
-- Media content retrieval is fully supported for images, videos, audio files, and other content types
-- This node is written without external dependencies to meet n8n verified node requirements
+- **Text Messages (V2)**: Send text messages with quote tokens and quick reply buttons
+- **Quick Replies**: Add postback and message action buttons to messages
+- **Quote Messages**: Reference previous messages in conversations
+- **User Profiles**: Retrieve user display names, pictures, and status messages
+- **Media Content**: Download images, videos, audio files, and documents
+- **Webhook Events**: Receive all LINE webhook events for comprehensive bot functionality
+- **No External Dependencies**: Built using only n8n-workflow types and Node.js built-ins
 
 ## Resources
 
