@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.0](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.5.0...v0.6.0) (2025-06-19)
+
+
+### Features
+
+* add multicast operation for bulk messaging to multiple users ([dd0b016](https://github.com/elct9620/n8n-nodes-line-messaging/commit/dd0b0165249a1ad550d5bed3f6b2de5633e8a956))
+* add send operation to LineMessaging node for proactive messaging ([e7718fd](https://github.com/elct9620/n8n-nodes-line-messaging/commit/e7718fd06b04bac8243fecb2e1dcea282eeb2f0b))
+
 ## [0.5.0](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.4.0...v0.5.0) (2025-06-16)
 
 ### Features
