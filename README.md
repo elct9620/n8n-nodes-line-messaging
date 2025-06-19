@@ -29,6 +29,7 @@ This node provides the following operations:
 
 - **Reply**: Reply to a user's message using the replyToken
 - **Send**: Proactively send messages to users using their User ID
+- **Multicast**: Send messages to multiple users simultaneously (up to 500 recipients)
 - **Get Profile**: Retrieve user profile information
 
 ### Line Messaging Data Node
@@ -77,6 +78,13 @@ You need to set up a LINE Bot channel in the [LINE Developers Console](https://d
 3. Add the messages you want to send
 4. This allows sending messages without waiting for user interaction
 
+### Sending Bulk Messages (Multicast)
+
+1. Use the LINE Messaging node with the "Multicast" operation
+2. Provide comma-separated User IDs (e.g., "U1234..., U5678..., U9012...")
+3. Add the messages you want to send to all recipients
+4. Supports up to 500 recipients per operation for efficient bulk messaging
+
 ### Getting User Profiles
 
 1. Use the LINE Messaging node with the "Get Profile" operation
@@ -101,6 +109,8 @@ This example workflow receives messages and echoes them back to the user:
 
 ## Features
 
+- **Multiple Messaging Types**: Reply to messages, send to individuals, or multicast to groups
+- **Bulk Messaging**: Send to up to 500 recipients simultaneously with multicast operation
 - **Text Messages (V2)**: Send text messages with quote tokens and quick reply buttons
 - **Quick Replies**: Add postback and message action buttons to messages
 - **Quote Messages**: Reference previous messages in conversations

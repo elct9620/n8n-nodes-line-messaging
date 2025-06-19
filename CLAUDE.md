@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is an n8n community node package for LINE Messaging API integration. It consists of three main nodes:
 
-- **LineMessaging** (`nodes/LineMessaging/`): Main node for sending messages (reply/send), getting user profiles
+- **LineMessaging** (`nodes/LineMessaging/`): Main node for messaging (reply/send/multicast) and user profiles
 - **LineMessagingData** (`nodes/LineMessagingData/`): Node for retrieving content (images, videos, audio, files) from messages
 - **LineMessagingTrigger** (`nodes/LineMessaging/LineMessagingTrigger.node.ts`): Webhook trigger for receiving LINE events
 
@@ -78,6 +78,7 @@ Operations are structured as separate modules in `actions/` folders:
 **LineMessaging Node:**
 - **Reply**: Respond to user messages using reply tokens (POST /message/reply)
 - **Send**: Proactively send messages to users using User IDs (POST /message/push)
+- **Multicast**: Send messages to multiple users simultaneously (POST /message/multicast, max 500 recipients)
 - **Get Profile**: Retrieve user profile information (GET /profile/{userId})
 
 **LineMessagingData Node:**
