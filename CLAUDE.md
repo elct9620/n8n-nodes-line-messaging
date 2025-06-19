@@ -33,24 +33,30 @@ pnpm prepublish
 ## Architecture
 
 ### Node Structure
+
 Each node follows n8n's standard structure:
+
 - `*.node.ts`: Main node implementation with INodeType interface
 - `*.node.json`: Node metadata (currently unused but follows convention)
 - `actions/`: Individual operations broken into separate files
 - `GenericFunctions.ts`: Shared API utility functions
 
 ### Key Files
+
 - `credentials/LineMessagingApi.credentials.ts`: Credential type definition requiring Channel Access Token and Channel Secret
 - `gulpfile.js`: Handles copying SVG icons to dist folder during build
 - Build output goes to `dist/` directory which is the published package
 
 ### Operation Pattern
+
 Operations are structured as separate modules in `actions/` folders:
+
 - Each operation exports a `description` array (INodeProperties) for UI configuration
 - Each operation exports an `execute` function that handles the API logic
 - Main node files import and reference these operations
 
 ### API Integration
+
 - Uses LINE Messaging API (https://api.line.me/v2/bot)
 - Authentication via Bearer token (Channel Access Token)
 - No external dependencies - built using only n8n-workflow types and Node.js built-ins
@@ -59,11 +65,13 @@ Operations are structured as separate modules in `actions/` folders:
 ## Linting Rules
 
 The project uses strict n8n-specific ESLint rules via `eslint-plugin-n8n-nodes-base` with separate configurations for:
+
 - Package.json validation
-- Credential type validation  
+- Credential type validation
 - Node implementation validation
 
 Key rule categories:
+
 - Node parameter naming and description conventions
 - Credential field requirements
 - File naming conventions

@@ -26,12 +26,15 @@ npm install @aotoki/n8n-nodes-line-messaging
 This node provides the following operations:
 
 ### Line Messaging Node
+
 - **Reply**: Reply to a user's message using the replyToken
 
 ### Line Messaging Data Node
+
 - **Get Content**: Retrieve content (images, videos, audio, files) from message IDs
 
 ### Line Messaging Trigger Node
+
 - **Webhook**: Receive events from LINE Messaging API
 
 ## Credentials
@@ -89,6 +92,6 @@ This example workflow receives messages and echoes them back to the user:
 
 ## Resources
 
-* [n8n community nodes documentation](https://docs.n8n.io/integrations/community-nodes/)
-* [LINE Messaging API documentation](https://developers.line.biz/en/docs/messaging-api/)
-* [LINE Bot Designer](https://developers.line.biz/en/services/bot-designer/)
+- [n8n community nodes documentation](https://docs.n8n.io/integrations/community-nodes/)
+- [LINE Messaging API documentation](https://developers.line.biz/en/docs/messaging-api/)
+- [LINE Bot Designer](https://developers.line.biz/en/services/bot-designer/)

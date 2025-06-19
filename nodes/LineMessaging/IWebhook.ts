@@ -244,7 +244,7 @@ export enum EventType {
 	VideoPlayComplete = 'videoPlayComplete',
 	Beacon = 'beacon',
 	AccountLink = 'accountLink',
-	Membership = 'membership'
+	Membership = 'membership',
 }
 
 type EventBody =

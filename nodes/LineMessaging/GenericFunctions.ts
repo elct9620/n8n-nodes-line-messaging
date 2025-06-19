@@ -18,12 +18,12 @@ import type {
  */
 export function verifySignature(channelSecret: string, signature: string, body: object): boolean {
 	const bodyString = JSON.stringify(body);
-	
+
 	// Create hmac using sha256
 	const hmac = crypto.createHmac('sha256', channelSecret);
 	hmac.update(bodyString);
 	const calculatedSignature = hmac.digest('base64');
-	
+
 	// Compare the calculated signature with the received one
 	return signature === calculatedSignature;
 }
@@ -65,4 +65,3 @@ export async function apiRequest(
 
 	return this.helpers.request(options);
 }
-

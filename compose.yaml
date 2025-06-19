@@ -2,10 +2,10 @@ services:
   n8n:
     image: n8n-nodes-line-messaging
     build: .
-    command: "start --tunnel"
+    command: 'start --tunnel'
     restart: always
     ports:
-      - "5678:5678"
+      - '5678:5678'
     environment:
       - N8N_PORT=5678
       - N8N_PROTOCOL=http
