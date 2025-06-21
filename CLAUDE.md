@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is an n8n community node package for LINE Messaging API integration. It consists of three main nodes:
 
 - **LineMessaging** (`nodes/LineMessaging/`): Main node for messaging (reply/send/multicast) and user profiles
-- **LineMessagingData** (`nodes/LineMessagingData/`): Node for retrieving content (images, videos, audio, files) from messages
+- **LineMessagingData** (`nodes/LineMessaging/LineMessagingData.node.ts`): Node for retrieving content (images, videos, audio, files) from messages
 - **LineMessagingTrigger** (`nodes/LineMessaging/LineMessagingTrigger.node.ts`): Webhook trigger for receiving LINE events
 
 ## Development Commands
@@ -40,6 +40,28 @@ pnpm prepublish
 4. **Fix issues**: Address any formatting or linting errors before committing
 
 This ensures all contributions maintain project standards and follow n8n community node conventions.
+
+## Release Management
+
+### Manual Version Bumping
+
+To manually trigger a specific version release with release-please:
+
+```bash
+# Create a commit with the desired version
+git commit --allow-empty -m "chore: release X.Y.Z
+
+Release-As: X.Y.Z"
+```
+
+**Example:**
+```bash
+git commit --allow-empty -m "chore: release 0.6.1
+
+Release-As: 0.6.1"
+```
+
+This pattern tells release-please to create a release with the specified version number, overriding its automatic version calculation based on conventional commits.
 
 ## Architecture
 
@@ -81,8 +103,7 @@ Operations are structured as separate modules in `actions/` folders:
 - **Multicast**: Send messages to multiple users simultaneously (POST /message/multicast, max 500 recipients)
 - **Get Profile**: Retrieve user profile information (GET /profile/{userId})
 
-**LineMessagingData Node:**
-- **Get Content**: Retrieve message content like images, videos, audio files
+- **Get Content**: Retrieve message content like images, videos, audio files (now located in LineMessaging directory)
 
 **LineMessagingTrigger Node:**
 - **Webhook**: Receive and process LINE webhook events
