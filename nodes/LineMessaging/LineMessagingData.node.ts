@@ -6,13 +6,13 @@ import type {
 } from 'n8n-workflow';
 import { NodeConnectionType } from 'n8n-workflow';
 
-import * as getContent from './actions/getContent.operation';
+import * as getContent from './data-actions/getContent.operation';
 
 export class LineMessagingData implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Line Messaging Data',
 		name: 'lineMessagingData',
-		icon: 'file:../LineMessaging/line.svg',
+		icon: 'file:line.svg',
 		group: ['output'],
 		version: [1],
 		subtitle: '={{$parameter["operation"]}}',

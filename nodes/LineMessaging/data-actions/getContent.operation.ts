@@ -7,7 +7,7 @@ import type {
 	JsonObject,
 } from 'n8n-workflow';
 import { NodeOperationError } from 'n8n-workflow';
-import { apiDataRequest } from '../GenericFunctions';
+import { apiDataRequest } from '../DataGenericFunctions';
 import { getFileExtension } from '../utils';
 
 export const properties: INodeProperties[] = [
