@@ -36,7 +36,7 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 			if (!userId) {
 				throw new NodeOperationError(
 					this.getNode(),
-					'User ID is required for getProfile operation',
+					'User ID is required. Use the LINE user ID from webhook or other sources.',
 				);
 			}
 

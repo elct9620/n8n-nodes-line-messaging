@@ -4,7 +4,7 @@ import type {
 	INodeTypeDescription,
 	IWebhookResponseData,
 } from 'n8n-workflow';
-import { NodeConnectionType } from 'n8n-workflow';
+import { NodeOperationError, NodeConnectionType } from 'n8n-workflow';
 import { verifySignature } from './GenericFunctions';
 import { EventType, IEvent, type IWebhook } from './IWebhook';
 
@@ -62,10 +62,16 @@ export class LineMessagingTrigger implements INodeType {
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
 		const credentials = await this.getCredentials('lineMessagingApi');
 		const headers = this.getHeaderData();
-		const bodyData = this.getBodyData() as any as IWebhook;
-
+		const bodyData = this.getBodyData() as unknown as IWebhook;
 		const receivedSignature = headers['x-line-signature'] as string;
 		const channelSecret = credentials.channelSecret as string;
+
+		if (!receivedSignature) {
+			throw new NodeOperationError(this.getNode(), 'Missing x-line-signature header');
+		}
+		if (!channelSecret) {
+			throw new NodeOperationError(this.getNode(), 'Missing channel secret in credentials');
+		}
 
 		// Verify the signature
 		if (!verifySignature(channelSecret, receivedSignature, bodyData)) {

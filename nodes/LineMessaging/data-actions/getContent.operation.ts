@@ -89,21 +89,23 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 						{},
 					);
 
-					transcodingStatus = response.status as string;
+					if (response && typeof response === 'object' && 'status' in response && typeof response.status === 'string') {
+						transcodingStatus = response.status;
+					}
 
 					if (transcodingStatus === 'processing') {
 						// Wait before retrying
 						await new Promise((resolve) => setTimeout(resolve, retryInterval));
 						currentRetry++;
 					} else if (transcodingStatus === 'failed') {
-						throw new NodeOperationError(this.getNode(), 'Content transcoding failed');
+						throw new NodeOperationError(this.getNode(), 'Content transcoding failed. The file may be corrupted or unsupported.');
 					}
 				}
 
 				if (transcodingStatus === 'processing') {
 					throw new NodeOperationError(
 						this.getNode(),
-						'Content is still processing after maximum retries',
+						'Content is still processing after maximum retries. Try again later or increase retry count.',
 					);
 				}
 			}
@@ -122,13 +124,35 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 				},
 			);
 
-			const contentType = response.headers['content-type'];
+			// Extract content type and body with proper type checking
+			let contentType = 'application/octet-stream';
+			let responseBody: ArrayBuffer | undefined;
+
+			if (response && typeof response === 'object') {
+				if ('headers' in response && response.headers && typeof response.headers === 'object') {
+					const headers = response.headers;
+					if ('content-type' in headers) {
+						const ct = (headers as Record<string, unknown>)['content-type'];
+						if (typeof ct === 'string') {
+							contentType = ct;
+						}
+					}
+				}
+				if ('body' in response && response.body instanceof ArrayBuffer) {
+					responseBody = response.body;
+				}
+			}
+
+			if (!responseBody) {
+				throw new NodeOperationError(this.getNode(), 'Failed to retrieve content data from LINE API');
+			}
+
 			const fileExtension = getFileExtension(contentType);
 			const fileName = `line_content_${messageId}${fileExtension}`;
 
 			// Create binary data
 			const binaryData: IBinaryData = {
-				data: Buffer.from(response.body).toString('base64'),
+				data: Buffer.from(responseBody).toString('base64'),
 				mimeType: contentType,
 				fileName,
 			};

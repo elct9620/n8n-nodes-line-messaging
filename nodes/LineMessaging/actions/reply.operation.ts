@@ -37,11 +37,11 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 			const replyToken = this.getNodeParameter('replyToken', i, '') as string;
 
 			if (!replyToken) {
-				throw new NodeOperationError(this.getNode(), 'Reply token is required for reply operation');
+				throw new NodeOperationError(this.getNode(), 'Reply token is required. Get it from the webhook trigger event.');
 			}
 
 			if (messages.length === 0) {
-				throw new NodeOperationError(this.getNode(), 'At least one message is required');
+				throw new NodeOperationError(this.getNode(), 'At least one message is required. Add text, image, or other message types.');
 			}
 
 			// Make API call to Line Messaging API

@@ -1,5 +1,5 @@
 import { Action, Message, MessageType } from './Message';
-import { IDataObject } from 'n8n-workflow';
+import { IDataObject, NodeOperationError } from 'n8n-workflow';
 
 /**
  * Factory for creating LINE Messaging API compatible message objects
@@ -15,7 +15,7 @@ export class MessageFactory {
 			case MessageType.TextV2:
 				return this.createTextV2Message(params);
 			default:
-				throw new Error(`Unsupported message type: ${type}`);
+				throw new NodeOperationError({} as never, `Unsupported message type: ${type}. Currently only 'textV2' messages are supported.`);
 		}
 	}
 

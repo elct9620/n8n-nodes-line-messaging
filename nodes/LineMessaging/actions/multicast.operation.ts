@@ -59,7 +59,7 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 			if (!toInput) {
 				throw new NodeOperationError(
 					this.getNode(),
-					'User IDs are required for multicast operation',
+					'User IDs are required. Provide comma-separated LINE user IDs.',
 				);
 			}
 
@@ -70,18 +70,18 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 				.filter((id) => id.length > 0);
 
 			if (to.length === 0) {
-				throw new NodeOperationError(this.getNode(), 'At least one valid User ID is required');
+				throw new NodeOperationError(this.getNode(), 'At least one valid User ID is required. Check your comma-separated list.');
 			}
 
 			if (to.length > 500) {
 				throw new NodeOperationError(
 					this.getNode(),
-					'Maximum 500 recipients allowed for multicast operation',
+					'Maximum 500 recipients allowed. You provided ' + to.length + ' user IDs.',
 				);
 			}
 
 			if (messages.length === 0) {
-				throw new NodeOperationError(this.getNode(), 'At least one message is required');
+				throw new NodeOperationError(this.getNode(), 'At least one message is required. Add text, image, or other message types.');
 			}
 
 			// Make API call to Line Messaging API

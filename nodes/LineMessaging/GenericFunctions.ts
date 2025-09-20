@@ -6,7 +6,64 @@ import type {
 	IHttpRequestMethods,
 	ILoadOptionsFunctions,
 	IWebhookFunctions,
+	JsonObject,
 } from 'n8n-workflow';
+import { NodeApiError } from 'n8n-workflow';
+
+enum LineApiType {
+	MESSAGING = 'messaging',
+	DATA = 'data',
+}
+
+/**
+ * Extracts HTTP status code from error object
+ */
+function getHttpStatusCode(error: unknown): number | undefined {
+	if (!error || typeof error !== 'object') {
+		return undefined;
+	}
+
+	if ('statusCode' in error && typeof error.statusCode === 'number') {
+		return error.statusCode;
+	}
+	if ('status' in error && typeof error.status === 'number') {
+		return error.status;
+	}
+	if ('httpCode' in error && typeof error.httpCode === 'number') {
+		return error.httpCode;
+	}
+	return undefined;
+}
+
+/**
+ * Creates user-friendly error message based on HTTP status code
+ */
+function createHttpErrorMessage(statusCode: number, error: unknown, apiType: LineApiType = LineApiType.MESSAGING): string {
+	const apiName = apiType === LineApiType.DATA ? 'LINE Data API' : 'LINE API';
+
+	switch (statusCode) {
+		case 401:
+			return 'Invalid Channel Access Token. Please check your LINE credentials.';
+		case 403:
+			return 'Access denied. Please verify your LINE channel permissions.';
+		case 404:
+			return apiType === LineApiType.DATA
+				? 'Content not found. The message content may have expired or been deleted.'
+				: 'Resource not found. The user or content may not exist.';
+		case 429:
+			return apiType === LineApiType.DATA
+				? 'Rate limit exceeded. Please wait before making more requests.'
+				: 'Rate limit exceeded. Please wait before sending more messages.';
+		case 500:
+			return `${apiName} is temporarily unavailable. Please try again.`;
+		default: {
+			const message = (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string')
+				? error.message
+				: 'Unknown error';
+			return `${apiName} error (${statusCode}): ${message}`;
+		}
+	}
+}
 
 /**
  * Verifies the Line Message API signature
@@ -46,7 +103,7 @@ export async function apiRequest(
 	body: IDataObject,
 	query?: IDataObject,
 	option: IDataObject = {},
-): Promise<any> {
+): Promise<IDataObject> {
 	const options = {
 		method,
 		headers: {
@@ -59,7 +116,22 @@ export async function apiRequest(
 		...option,
 	};
 
-	return this.helpers.httpRequestWithAuthentication.call(this, 'lineMessagingApi', options);
+	try {
+		return await this.helpers.httpRequestWithAuthentication.call(this, 'lineMessagingApi', options);
+	} catch (error: unknown) {
+		const statusCode = getHttpStatusCode(error);
+		let errorMessage: string;
+
+		if (statusCode) {
+			errorMessage = createHttpErrorMessage(statusCode, error, LineApiType.MESSAGING);
+		} else if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
+			errorMessage = `LINE API error: ${error.message}`;
+		} else {
+			errorMessage = 'LINE API request failed';
+		}
+
+		throw new NodeApiError(this.getNode(), error as JsonObject, { message: errorMessage });
+	}
 }
 
 /**
@@ -80,7 +152,7 @@ export async function apiDataRequest(
 	body: IDataObject,
 	query?: IDataObject,
 	option: IDataObject = {},
-): Promise<any> {
+): Promise<IDataObject> {
 	const options = {
 		method,
 		body,
@@ -90,5 +162,20 @@ export async function apiDataRequest(
 		...option,
 	};
 
-	return this.helpers.httpRequestWithAuthentication.call(this, 'lineMessagingApi', options);
+	try {
+		return await this.helpers.httpRequestWithAuthentication.call(this, 'lineMessagingApi', options);
+	} catch (error: unknown) {
+		const statusCode = getHttpStatusCode(error);
+		let errorMessage: string;
+
+		if (statusCode) {
+			errorMessage = createHttpErrorMessage(statusCode, error, LineApiType.DATA);
+		} else if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
+			errorMessage = `LINE Data API error: ${error.message}`;
+		} else {
+			errorMessage = 'LINE Data API request failed';
+		}
+
+		throw new NodeApiError(this.getNode(), error as JsonObject, { message: errorMessage });
+	}
 }
