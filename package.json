@@ -4,12 +4,13 @@
 	"description": "The LINE Bot node for n8n, which allows you to send messages to LINE users using the LINE Messaging API.",
 	"main": "index.js",
 	"scripts": {
-		"build": "rimraf dist && tsc && gulp build:icons",
-		"dev": "tsc --watch",
 		"format": "prettier nodes --write",
-		"lint": "eslint nodes package.json",
-		"lintfix": "eslint nodes package.json --fix",
-		"prepublishOnly": "pnpm build && pnpm lint -c .eslintrc.prepublish.js nodes package.json"
+		"build": "n8n-node build",
+		"build:watch": "tsc --watch",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"prepublishOnly": "n8n-node prerelease"
 	},
 	"repository": {
 		"type": "git",
@@ -40,14 +41,11 @@
 		]
 	},
 	"devDependencies": {
-		"@types/node": "^24.0.1",
-		"@typescript-eslint/parser": "~8.32.0",
-		"eslint": "^8.57.0",
-		"eslint-plugin-n8n-nodes-base": "^1.16.3",
-		"gulp": "^5.0.1",
-		"prettier": "^3.5.3",
-		"rimraf": "^6.0.1",
-		"typescript": "^5.8.2"
+		"@n8n/node-cli": "^0.8.0",
+		"@types/node": "^24.5.2",
+		"eslint": "^9.36.0",
+		"prettier": "^3.6.2",
+		"typescript": "^5.9.2"
 	},
 	"peerDependencies": {
 		"n8n-workflow": "*"
