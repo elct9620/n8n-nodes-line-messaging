@@ -27,7 +27,7 @@ pnpm lint
 pnpm lintfix
 
 # Pre-publish (build + lint with stricter rules)
-pnpm prepublish
+pnpm prepublishOnly
 ```
 
 ## Code Quality Workflow
@@ -90,10 +90,11 @@ Operations are structured as separate modules in `actions/` folders:
 
 ### API Integration
 
-- Uses LINE Messaging API (https://api.line.me/v2/bot)
-- Authentication via Bearer token (Channel Access Token)
-- No external dependencies - built using only n8n-workflow types and Node.js built-ins
-- API calls implemented in GenericFunctions.ts modules
+- **Main API**: `https://api.line.me/v2/bot` - messaging operations
+- **Data API**: `https://api-data.line.me/v2/bot` - content retrieval
+- **Authentication**: Uses n8n's `httpRequestWithAuthentication` with Bearer token
+- **Signature Verification**: HMAC-SHA256 validation for webhooks in `GenericFunctions.ts`
+- **No external dependencies** - built using only n8n-workflow types and Node.js built-ins
 
 ### Available Operations
 
@@ -130,3 +131,19 @@ Key rule categories:
 - Includes n8n-workflow types
 - Outputs to `dist/` with declarations and source maps
 - Covers credentials, nodes, and package.json files
+
+## Message Factory Pattern
+
+The `MessageFactory` class (`nodes/LineMessaging/shared/MessageFactory.ts`) handles message creation:
+
+- **TextV2 messages**: Supports quote tokens and quick replies
+- **Quick Reply actions**: Postback and message action types
+- **Extensible design**: Easy to add new message types
+- Converts n8n UI parameters to LINE API format
+
+## Error Handling Pattern
+
+- Use `NodeOperationError` for all operation failures
+- Support `continueOnFail()` mode for error tolerance
+- Proper item pairing in execute functions for workflow consistency
+- Return descriptive error messages with context
