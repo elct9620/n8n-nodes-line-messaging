@@ -24,7 +24,7 @@ pnpm format
 
 # Linting
 pnpm lint
-pnpm lintfix
+pnpm lint:fix
 
 # Pre-publish (build + lint with stricter rules)
 pnpm prepublishOnly
@@ -77,7 +77,7 @@ Each node follows n8n's standard structure:
 ### Key Files
 
 - `credentials/LineMessagingApi.credentials.ts`: Credential type definition requiring Channel Access Token and Channel Secret
-- `gulpfile.js`: Handles copying SVG icons to dist folder during build
+- Build uses `@n8n/node-cli` for compilation and asset handling (migrated from custom gulp setup)
 - Build output goes to `dist/` directory which is the published package
 
 ### Operation Pattern
@@ -132,9 +132,9 @@ Key rule categories:
 - Outputs to `dist/` with declarations and source maps
 - Covers credentials, nodes, and package.json files
 
-## Message Factory Pattern
+## Message Creation Pattern
 
-The `MessageFactory` class (`nodes/LineMessaging/shared/MessageFactory.ts`) handles message creation:
+The message creation is handled by utility classes in `nodes/LineMessaging/`:
 
 - **TextV2 messages**: Supports quote tokens and quick replies
 - **Quick Reply actions**: Postback and message action types
