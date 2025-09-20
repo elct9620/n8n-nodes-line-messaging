@@ -9,7 +9,7 @@
 		"format": "prettier nodes --write",
 		"lint": "eslint nodes package.json",
 		"lintfix": "eslint nodes package.json --fix",
-		"prepublish": "pnpm build && pnpm lint -c .eslintrc.prepublish.js nodes package.json"
+		"prepublishOnly": "pnpm build && pnpm lint -c .eslintrc.prepublish.js nodes package.json"
 	},
 	"repository": {
 		"type": "git",
