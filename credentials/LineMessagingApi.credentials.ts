@@ -1,4 +1,9 @@
-import type { ICredentialTestRequest, ICredentialType, INodeProperties } from 'n8n-workflow';
+import type {
+	IAuthenticateGeneric,
+	ICredentialTestRequest,
+	ICredentialType,
+	INodeProperties,
+} from 'n8n-workflow';
 
 export class LineMessagingApi implements ICredentialType {
 	name = 'lineMessagingApi';
@@ -28,14 +33,20 @@ export class LineMessagingApi implements ICredentialType {
 		},
 	];
 
+	authenticate: IAuthenticateGeneric = {
+		type: 'generic',
+		properties: {
+			headers: {
+				Authorization: '={{`Bearer ${$credentials.accessToken}`}}',
+			},
+		},
+	};
+
 	test: ICredentialTestRequest = {
 		request: {
 			method: 'GET',
 			baseURL: 'https://api.line.me/v2/bot',
 			url: '/info',
-			headers: {
-				Authorization: '={{"Bearer " + $credentials.accessToken}}',
-			},
 			json: true,
 		},
 	};

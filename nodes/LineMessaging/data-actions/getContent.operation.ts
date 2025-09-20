@@ -116,9 +116,9 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 				{},
 				{},
 				{
-					encoding: null, // Important: This ensures the body is a Buffer
+					encoding: 'arraybuffer',
 					json: false,
-					resolveWithFullResponse: true,
+					returnFullResponse: true,
 				},
 			);
 

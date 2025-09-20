@@ -47,14 +47,10 @@ export async function apiRequest(
 	query?: IDataObject,
 	option: IDataObject = {},
 ): Promise<any> {
-	const credentials = await this.getCredentials('lineMessagingApi');
-	const channelAccessToken = credentials.accessToken as string;
-
 	const options = {
 		method,
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: `Bearer ${channelAccessToken}`,
 		},
 		body,
 		url: `https://api.line.me/v2/bot${endpoint}`,
@@ -63,7 +59,7 @@ export async function apiRequest(
 		...option,
 	};
 
-	return this.helpers.request(options);
+	return this.helpers.httpRequestWithAuthentication.call(this, 'lineMessagingApi', options);
 }
 
 /**
@@ -85,14 +81,8 @@ export async function apiDataRequest(
 	query?: IDataObject,
 	option: IDataObject = {},
 ): Promise<any> {
-	const credentials = await this.getCredentials('lineMessagingApi');
-	const channelAccessToken = credentials.accessToken as string;
-
 	const options = {
 		method,
-		headers: {
-			Authorization: `Bearer ${channelAccessToken}`,
-		},
 		body,
 		url: `https://api-data.line.me/v2/bot${endpoint}`,
 		qs: query,
@@ -100,5 +90,5 @@ export async function apiDataRequest(
 		...option,
 	};
 
-	return this.helpers.request(options);
+	return this.helpers.httpRequestWithAuthentication.call(this, 'lineMessagingApi', options);
 }
