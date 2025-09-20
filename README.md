@@ -11,6 +11,7 @@ LINE Messaging API enables developers to build chatbots and integrate messaging 
 - [Credentials](#credentials)
 - [Compatibility](#compatibility)
 - [Usage](#usage)
+- [Development](#development)
 - [Resources](#resources)
 
 ## Installation
@@ -118,6 +119,37 @@ This example workflow receives messages and echoes them back to the user:
 - **Media Content**: Download images, videos, audio files, and documents
 - **Webhook Events**: Receive all LINE webhook events for comprehensive bot functionality
 - **No External Dependencies**: Built using only n8n-workflow types and Node.js built-ins
+
+## Development
+
+To develop and test this node locally:
+
+```bash
+# Clone the repository
+git clone git@github.com:elct9620/n8n-nodes-line-messaging.git
+cd n8n-nodes-line-messaging
+
+# Install dependencies
+pnpm install
+
+# Start the development server
+pnpm n8n-node dev
+```
+
+The `pnpm n8n-node dev` command will start a local n8n instance with the node loaded for development and testing. This replaces the previous Docker-based development setup.
+
+For more development commands, see the available scripts:
+
+```bash
+# Build the project
+pnpm build
+
+# Run linting
+pnpm lint
+
+# Format code
+pnpm format
+```
 
 ## Resources
 
