@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.0](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.6.1...v0.7.0) (2025-09-20)
+
+
+### Features
+
+* enhance error handling with user-friendly messages ([126b6a2](https://github.com/elct9620/n8n-nodes-line-messaging/commit/126b6a21cc46096d795a817f8b2b8589db5e403e))
+* upgrade to use n8n's built-in authentication system ([3e2d984](https://github.com/elct9620/n8n-nodes-line-messaging/commit/3e2d9841ade12f2cf9aa3feb6101979899f2f3ac))
+
 ## [0.6.1](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.6.0...v0.6.1) (2025-06-21)
 
 
