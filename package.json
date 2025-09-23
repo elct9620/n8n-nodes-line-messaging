@@ -1,6 +1,6 @@
 {
 	"name": "@aotoki/n8n-nodes-line-messaging",
-	"version": "0.7.1",
+	"version": "0.7.2",
 	"description": "The LINE Bot node for n8n, which allows you to send messages to LINE users using the LINE Messaging API.",
 	"main": "index.js",
 	"scripts": {
