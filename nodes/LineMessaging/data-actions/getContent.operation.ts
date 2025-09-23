@@ -1,12 +1,12 @@
-import type {
+import {
 	IExecuteFunctions,
 	INodeExecutionData,
 	INodeProperties,
 	IDataObject,
 	IBinaryData,
 	JsonObject,
+	sleep, NodeOperationError 
 } from 'n8n-workflow';
-import { NodeOperationError } from 'n8n-workflow';
 import { apiDataRequest } from '../GenericFunctions';
 import { getFileExtension } from '../utils';
 
@@ -89,16 +89,24 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 						{},
 					);
 
-					if (response && typeof response === 'object' && 'status' in response && typeof response.status === 'string') {
+					if (
+						response &&
+						typeof response === 'object' &&
+						'status' in response &&
+						typeof response.status === 'string'
+					) {
 						transcodingStatus = response.status;
 					}
 
 					if (transcodingStatus === 'processing') {
 						// Wait before retrying
-						await new Promise((resolve) => setTimeout(resolve, retryInterval));
+						await sleep(retryInterval);
 						currentRetry++;
 					} else if (transcodingStatus === 'failed') {
-						throw new NodeOperationError(this.getNode(), 'Content transcoding failed. The file may be corrupted or unsupported.');
+						throw new NodeOperationError(
+							this.getNode(),
+							'Content transcoding failed. The file may be corrupted or unsupported.',
+						);
 					}
 				}
 
@@ -144,7 +152,10 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 			}
 
 			if (!responseBody) {
-				throw new NodeOperationError(this.getNode(), 'Failed to retrieve content data from LINE API');
+				throw new NodeOperationError(
+					this.getNode(),
+					'Failed to retrieve content data from LINE API',
+				);
 			}
 
 			const fileExtension = getFileExtension(contentType);
