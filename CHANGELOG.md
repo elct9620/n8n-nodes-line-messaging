@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.7.0...v0.7.1) (2025-09-23)
+
+
+### Bug Fixes
+
+* replace setTimeout with n8n sleep utility in getContent operation ([32eeaeb](https://github.com/elct9620/n8n-nodes-line-messaging/commit/32eeaeb23de2d0f9e2a88af797404f98d23999f7))
+
 ## [0.7.0](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.6.1...v0.7.0) (2025-09-20)
 
 
