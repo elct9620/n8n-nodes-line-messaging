@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.2](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.7.1...v0.7.2) (2025-09-23)
+
+
+### Bug Fixes
+
+* handle binary data streaming correctly in getContent operation ([3ddcc5b](https://github.com/elct9620/n8n-nodes-line-messaging/commit/3ddcc5ba40582bd3c9e06f08aeac329fc0330606))
+
 ## [0.7.1](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.7.0...v0.7.1) (2025-09-23)
 
 
