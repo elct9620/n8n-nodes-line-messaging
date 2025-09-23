@@ -5,10 +5,13 @@ import {
 	IDataObject,
 	IBinaryData,
 	JsonObject,
-	sleep, NodeOperationError 
+	sleep,
+	NodeOperationError,
+	IN8nHttpFullResponse,
 } from 'n8n-workflow';
 import { apiDataRequest } from '../GenericFunctions';
 import { getFileExtension } from '../utils';
+import { Readable } from 'stream';
 
 export const properties: INodeProperties[] = [
 	{
@@ -119,7 +122,7 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 			}
 
 			// Request content using apiDataRequest with custom options for binary data
-			const response = await apiDataRequest.call(
+			const response = (await apiDataRequest.call(
 				this,
 				'GET',
 				`/message/${messageId}/content`,
@@ -130,25 +133,14 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 					json: false,
 					returnFullResponse: true,
 				},
-			);
+			)) as IN8nHttpFullResponse;
 
 			// Extract content type and body with proper type checking
 			let contentType = 'application/octet-stream';
-			let responseBody: ArrayBuffer | undefined;
+			const responseBody: Readable = response.body as Readable;
 
-			if (response && typeof response === 'object') {
-				if ('headers' in response && response.headers && typeof response.headers === 'object') {
-					const headers = response.headers;
-					if ('content-type' in headers) {
-						const ct = (headers as Record<string, unknown>)['content-type'];
-						if (typeof ct === 'string') {
-							contentType = ct;
-						}
-					}
-				}
-				if ('body' in response && response.body instanceof ArrayBuffer) {
-					responseBody = response.body;
-				}
+			if ('headers' in response) {
+				contentType = (response.headers['content-type'] as string) || contentType;
 			}
 
 			if (!responseBody) {
@@ -160,13 +152,11 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 
 			const fileExtension = getFileExtension(contentType);
 			const fileName = `line_content_${messageId}${fileExtension}`;
-
-			// Create binary data
-			const binaryData: IBinaryData = {
-				data: Buffer.from(responseBody).toString('base64'),
-				mimeType: contentType,
+			const binaryData: IBinaryData = await this.helpers.prepareBinaryData(
+				responseBody,
 				fileName,
-			};
+				contentType,
+			);
 
 			// Add binary data to the item
 			const newItem: INodeExecutionData = {

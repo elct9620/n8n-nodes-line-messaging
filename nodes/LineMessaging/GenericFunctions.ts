@@ -5,6 +5,8 @@ import type {
 	IHookFunctions,
 	IHttpRequestMethods,
 	ILoadOptionsFunctions,
+	IN8nHttpFullResponse,
+	IN8nHttpResponse,
 	IWebhookFunctions,
 	JsonObject,
 } from 'n8n-workflow';
@@ -38,7 +40,11 @@ function getHttpStatusCode(error: unknown): number | undefined {
 /**
  * Creates user-friendly error message based on HTTP status code
  */
-function createHttpErrorMessage(statusCode: number, error: unknown, apiType: LineApiType = LineApiType.MESSAGING): string {
+function createHttpErrorMessage(
+	statusCode: number,
+	error: unknown,
+	apiType: LineApiType = LineApiType.MESSAGING,
+): string {
 	const apiName = apiType === LineApiType.DATA ? 'LINE Data API' : 'LINE API';
 
 	switch (statusCode) {
@@ -57,9 +63,13 @@ function createHttpErrorMessage(statusCode: number, error: unknown, apiType: Lin
 		case 500:
 			return `${apiName} is temporarily unavailable. Please try again.`;
 		default: {
-			const message = (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string')
-				? error.message
-				: 'Unknown error';
+			const message =
+				error &&
+				typeof error === 'object' &&
+				'message' in error &&
+				typeof error.message === 'string'
+					? error.message
+					: 'Unknown error';
 			return `${apiName} error (${statusCode}): ${message}`;
 		}
 	}
@@ -124,7 +134,12 @@ export async function apiRequest(
 
 		if (statusCode) {
 			errorMessage = createHttpErrorMessage(statusCode, error, LineApiType.MESSAGING);
-		} else if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
+		} else if (
+			error &&
+			typeof error === 'object' &&
+			'message' in error &&
+			typeof error.message === 'string'
+		) {
 			errorMessage = `LINE API error: ${error.message}`;
 		} else {
 			errorMessage = 'LINE API request failed';
@@ -152,7 +167,7 @@ export async function apiDataRequest(
 	body: IDataObject,
 	query?: IDataObject,
 	option: IDataObject = {},
-): Promise<IDataObject> {
+): Promise<IN8nHttpFullResponse | IN8nHttpResponse> {
 	const options = {
 		method,
 		body,
@@ -170,7 +185,12 @@ export async function apiDataRequest(
 
 		if (statusCode) {
 			errorMessage = createHttpErrorMessage(statusCode, error, LineApiType.DATA);
-		} else if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
+		} else if (
+			error &&
+			typeof error === 'object' &&
+			'message' in error &&
+			typeof error.message === 'string'
+		) {
 			errorMessage = `LINE Data API error: ${error.message}`;
 		} else {
 			errorMessage = 'LINE Data API request failed';
