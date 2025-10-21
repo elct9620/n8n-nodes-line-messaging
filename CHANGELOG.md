@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.7.3...v0.8.0) (2025-10-21)
+
+
+### Features
+
+* add show loading animation operation ([8076069](https://github.com/elct9620/n8n-nodes-line-messaging/commit/80760699dca4ad9ab31dabe3cd4f5ca3beabd50d))
+
 ## [0.7.3](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.7.2...v0.7.3) (2025-09-23)
 
 
