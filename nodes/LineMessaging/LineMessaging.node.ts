@@ -10,6 +10,7 @@ import * as reply from './actions/reply.operation';
 import * as getProfile from './actions/getProfile.operation';
 import * as send from './actions/send.operation';
 import * as multicast from './actions/multicast.operation';
+import * as showLoadingAnimation from './actions/showLoadingAnimation.operation';
 
 export class LineMessaging implements INodeType {
 	description: INodeTypeDescription = {
@@ -64,6 +65,12 @@ export class LineMessaging implements INodeType {
 						description: 'Send a message to a user',
 						action: 'Send a message to a user',
 					},
+					{
+						name: 'Show Loading Animation',
+						value: 'showLoadingAnimation',
+						description: 'Display a loading animation to a user',
+						action: 'Display a loading animation to a user',
+					},
 				],
 			},
 			// Reply operation properties
@@ -77,6 +84,9 @@ export class LineMessaging implements INodeType {
 
 			// Get Profile operation properties
 			...getProfile.description,
+
+			// Show Loading Animation operation properties
+			...showLoadingAnimation.description,
 		],
 	};
 
@@ -93,6 +103,8 @@ export class LineMessaging implements INodeType {
 			returnData = await multicast.execute.call(this, items);
 		} else if (operation === 'getProfile') {
 			returnData = await getProfile.execute.call(this, items);
+		} else if (operation === 'showLoadingAnimation') {
+			returnData = await showLoadingAnimation.execute.call(this, items);
 		}
 
 		return [returnData];
