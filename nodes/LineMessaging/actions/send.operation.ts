@@ -37,11 +37,17 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 			const to = this.getNodeParameter('to', i, '') as string;
 
 			if (!to) {
-				throw new NodeOperationError(this.getNode(), 'User ID is required. Use the LINE user ID from webhook or profile.');
+				throw new NodeOperationError(
+					this.getNode(),
+					'User ID is required. Use the LINE user ID from webhook or profile.',
+				);
 			}
 
 			if (messages.length === 0) {
-				throw new NodeOperationError(this.getNode(), 'At least one message is required. Add text, image, or other message types.');
+				throw new NodeOperationError(
+					this.getNode(),
+					'At least one message is required. Add text, image, or other message types.',
+				);
 			}
 
 			// Make API call to Line Messaging API

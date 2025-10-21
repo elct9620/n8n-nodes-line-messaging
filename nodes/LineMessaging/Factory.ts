@@ -15,7 +15,10 @@ export class MessageFactory {
 			case MessageType.TextV2:
 				return this.createTextV2Message(params);
 			default:
-				throw new NodeOperationError({} as never, `Unsupported message type: ${type}. Currently only 'textV2' messages are supported.`);
+				throw new NodeOperationError(
+					{} as never,
+					`Unsupported message type: ${type}. Currently only 'textV2' messages are supported.`,
+				);
 		}
 	}
 

@@ -70,7 +70,10 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 				.filter((id) => id.length > 0);
 
 			if (to.length === 0) {
-				throw new NodeOperationError(this.getNode(), 'At least one valid User ID is required. Check your comma-separated list.');
+				throw new NodeOperationError(
+					this.getNode(),
+					'At least one valid User ID is required. Check your comma-separated list.',
+				);
 			}
 
 			if (to.length > 500) {
@@ -81,7 +84,10 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 			}
 
 			if (messages.length === 0) {
-				throw new NodeOperationError(this.getNode(), 'At least one message is required. Add text, image, or other message types.');
+				throw new NodeOperationError(
+					this.getNode(),
+					'At least one message is required. Add text, image, or other message types.',
+				);
 			}
 
 			// Make API call to Line Messaging API
