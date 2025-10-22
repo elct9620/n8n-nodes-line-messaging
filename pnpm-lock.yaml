@@ -13,8 +13,8 @@ importers:
         version: 1.82.0
     devDependencies:
       '@n8n/node-cli':
-        specifier: ^0.8.0
-        version: 0.8.0(@typescript-eslint/utils@8.44.0(eslint@9.38.0)(typescript@5.9.3))(eslint@9.38.0)(typescript@5.9.3)
+        specifier: ^0.13.0
+        version: 0.13.0(@typescript-eslint/utils@8.44.0(eslint@9.38.0)(typescript@5.9.3))(eslint@9.38.0)(typescript@5.9.3)
       '@types/node':
         specifier: ^24.5.2
         version: 24.9.1
@@ -111,8 +111,13 @@ packages:
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
     engines: {node: '>=12'}
 
-  '@n8n/node-cli@0.8.0':
-    resolution: {integrity: sha512-4aVm9gnbi84spYoejO9q6LJjlVDNVm46L1J3lH0DiYyYM+y+rsgGlw6U+09duWq/k9YefaVB50juZQq9AVQpfQ==}
+  '@n8n/eslint-plugin-community-nodes@0.6.0':
+    resolution: {integrity: sha512-VafBm+pHvOiO/DPZfdyYBHWS6ZEeu3jMwK3E1lxE7rXUbLlRoqW3YL4jnJ5R8JIChMVcZeoybGALt1lnuixyjA==}
+    peerDependencies:
+      eslint: '>= 9'
+
+  '@n8n/node-cli@0.13.0':
+    resolution: {integrity: sha512-4YRA1r3D2k+qA2psKNQHd+g077slvJpRunyRt3etgI5Kmbo445wQJSMF03+f4Els1EP3AO7eN7F6HSTz0AHtzA==}
     hasBin: true
     peerDependencies:
       eslint: '>= 9'
@@ -680,6 +685,10 @@ packages:
 
   fast-levenshtein@2.0.6:
     resolution: {integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==}
+
+  fastest-levenshtein@1.0.16:
+    resolution: {integrity: sha512-eRnCtTTtGZFpQCwhJiUOuxPQWRXVKYDn0b2PeHfXL6/Zi53SLAzAHfVhVWK2AryC/WH05kGfxhFIPvTF0SXQzg==}
+    engines: {node: '>= 4.9.1'}
 
   fastq@1.19.1:
     resolution: {integrity: sha512-GwLTyxkCXjXbxqIhTsMI2Nui8huMPtnxg7krajPJAjnEG/iiOS7i+zCtWGZR9G0NBKbXKh6X9m9UIsYX/N6vvQ==}
@@ -1470,13 +1479,13 @@ snapshots:
 
   '@clack/core@0.5.0':
     dependencies:
-      picocolors: 1.0.1
+      picocolors: 1.1.1
       sisteransi: 1.0.5
 
   '@clack/prompts@0.11.0':
     dependencies:
       '@clack/core': 0.5.0
-      picocolors: 1.0.1
+      picocolors: 1.1.1
       sisteransi: 1.0.5
 
   '@emnapi/core@1.5.0':
@@ -1567,9 +1576,19 @@ snapshots:
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: wrap-ansi@7.0.0
 
-  '@n8n/node-cli@0.8.0(@typescript-eslint/utils@8.44.0(eslint@9.38.0)(typescript@5.9.3))(eslint@9.38.0)(typescript@5.9.3)':
+  '@n8n/eslint-plugin-community-nodes@0.6.0(eslint@9.38.0)(typescript@5.9.3)':
+    dependencies:
+      '@typescript-eslint/utils': 8.44.0(eslint@9.38.0)(typescript@5.9.3)
+      eslint: 9.38.0
+      fastest-levenshtein: 1.0.16
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
+  '@n8n/node-cli@0.13.0(@typescript-eslint/utils@8.44.0(eslint@9.38.0)(typescript@5.9.3))(eslint@9.38.0)(typescript@5.9.3)':
     dependencies:
       '@clack/prompts': 0.11.0
+      '@n8n/eslint-plugin-community-nodes': 0.6.0(eslint@9.38.0)(typescript@5.9.3)
       '@oclif/core': 4.5.4
       change-case: 5.4.4
       eslint: 9.38.0
@@ -2245,6 +2264,8 @@ snapshots:
 
   fast-levenshtein@2.0.6: {}
 
+  fastest-levenshtein@1.0.16: {}
+
   fastq@1.19.1:
     dependencies:
       reusify: 1.1.0
@@ -2347,7 +2368,7 @@ snapshots:
     dependencies:
       array-union: 2.1.0
       dir-glob: 3.0.1
-      fast-glob: 3.2.12
+      fast-glob: 3.3.3
       ignore: 5.3.2
       merge2: 1.4.1
       slash: 3.0.0

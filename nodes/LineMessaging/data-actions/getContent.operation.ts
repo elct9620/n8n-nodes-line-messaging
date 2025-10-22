@@ -11,7 +11,6 @@ import {
 } from 'n8n-workflow';
 import { apiDataRequest } from '../GenericFunctions';
 import { getFileExtension } from '../utils';
-import { Readable } from 'stream';
 
 export const properties: INodeProperties[] = [
 	{
@@ -137,7 +136,7 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 
 			// Extract content type and body with proper type checking
 			let contentType = 'application/octet-stream';
-			const responseBody: Readable = response.body as Readable;
+			const responseBody = response.body;
 
 			if ('headers' in response) {
 				contentType = (response.headers['content-type'] as string) || contentType;
@@ -153,7 +152,7 @@ export async function execute(this: IExecuteFunctions, items: INodeExecutionData
 			const fileExtension = getFileExtension(contentType);
 			const fileName = `line_content_${messageId}${fileExtension}`;
 			const binaryData: IBinaryData = await this.helpers.prepareBinaryData(
-				responseBody,
+				responseBody as Buffer,
 				fileName,
 				contentType,
 			);

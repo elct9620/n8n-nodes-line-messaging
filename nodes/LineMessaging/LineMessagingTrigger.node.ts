@@ -16,6 +16,7 @@ export class LineMessagingTrigger implements INodeType {
 		group: ['trigger'],
 		version: [1],
 		defaultVersion: 1,
+		usableAsTool: undefined,
 		subtitle: '=Events: {{$parameter["events"].join(", ")}}',
 		description: 'Starts the workflow on a Line Messaging update',
 		defaults: {

@@ -12,6 +12,8 @@ export class LineMessagingApi implements ICredentialType {
 
 	documentationUrl = 'https://developers.line.biz/en/docs/messaging-api/overview/';
 
+	icon = 'file:../nodes/LineMessaging/line.svg' as const;
+
 	properties: INodeProperties[] = [
 		{
 			displayName: 'Channel Access Token',
