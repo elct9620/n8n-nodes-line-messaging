@@ -62,6 +62,7 @@ export class LineMessagingTrigger implements INodeType {
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
 		const credentials = await this.getCredentials('lineMessagingApi');
 		const headers = this.getHeaderData();
+		const req = this.getRequestObject();
 		const bodyData = this.getBodyData() as unknown as IWebhook;
 		const receivedSignature = headers['x-line-signature'] as string;
 		const channelSecret = credentials.channelSecret as string;
@@ -73,8 +74,8 @@ export class LineMessagingTrigger implements INodeType {
 			throw new NodeOperationError(this.getNode(), 'Missing channel secret in credentials');
 		}
 
-		// Verify the signature
-		if (!verifySignature(channelSecret, receivedSignature, bodyData)) {
+		// Verify the signature using raw body to preserve unicode characters
+		if (!verifySignature(channelSecret, receivedSignature, req.rawBody)) {
 			const res = this.getResponseObject();
 			res.status(403).json({ error: 'Invalid signature' });
 			return {
