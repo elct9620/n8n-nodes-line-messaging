@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.8.0...v0.8.1) (2025-10-22)
+
+
+### Bug Fixes
+
+* preserve unicode characters in webhook signature verification ([69c7807](https://github.com/elct9620/n8n-nodes-line-messaging/commit/69c7807a684b7c21403c8087b12ff51ff5233654))
+
 ## [0.8.0](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.7.3...v0.8.0) (2025-10-21)
 
 
