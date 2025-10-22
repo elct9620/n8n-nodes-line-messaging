@@ -3,6 +3,7 @@
 	"version": "0.8.0",
 	"description": "The LINE Bot node for n8n, which allows you to send messages to LINE users using the LINE Messaging API.",
 	"main": "index.js",
+	"packageManager": "pnpm@10.15.1",
 	"scripts": {
 		"format": "prettier nodes --write",
 		"build": "n8n-node build",
