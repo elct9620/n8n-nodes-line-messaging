@@ -30,6 +30,17 @@ pnpm lint:fix
 pnpm prepublishOnly
 ```
 
+## Local Development Setup
+
+For local development with a running n8n instance:
+
+```bash
+# Start n8n with the node loaded for development
+pnpm n8n-node dev
+```
+
+This command starts a local n8n instance with hot-reloading enabled, replacing the previous Docker-based development setup. Changes to TypeScript files will automatically rebuild and reload in the n8n interface.
+
 ## Code Quality Workflow
 
 **IMPORTANT**: Always verify code quality before committing changes:
@@ -134,12 +145,23 @@ Key rule categories:
 
 ## Message Creation Pattern
 
-The message creation is handled by utility classes in `nodes/LineMessaging/`:
+The message creation is handled by a factory pattern in `nodes/LineMessaging/`:
 
-- **TextV2 messages**: Supports quote tokens and quick replies
-- **Quick Reply actions**: Postback and message action types
-- **Extensible design**: Easy to add new message types
-- Converts n8n UI parameters to LINE API format
+- **MessageFactory** (`Factory.ts`): Converts n8n UI parameters to LINE API message format
+  - `createMessage()`: Main entry point that routes to specific message type creators
+  - `createTextV2Message()`: Handles TextV2 with quote tokens and quick replies
+- **Message types** (`Message.ts`): TypeScript enums and type definitions
+  - `MessageType.TextV2`: Currently the only supported message type
+  - `Action`: Union type for message and postback quick reply actions
+- **Shared properties** (`actions/shared/`): Reusable UI configuration
+  - `messageProperties.ts`: Common message field configurations shared across operations
+  - `operationProperties.ts`: Common operation parameters
+
+**Extensibility**: To add new message types:
+1. Add enum value to `MessageType` in `Message.ts`
+2. Define type interface extending `CommonMessage` in `Message.ts`
+3. Add creation method in `MessageFactory` class
+4. Update UI options in `messageProperties.ts`
 
 ## Error Handling Pattern
 
