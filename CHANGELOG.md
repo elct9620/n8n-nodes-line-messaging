@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.9.0](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.8.1...v0.9.0) (2025-10-24)
+
+
+### Features
+
+* **LineMessaging:** add Flex Message support with JSON input ([ba29779](https://github.com/elct9620/n8n-nodes-line-messaging/commit/ba29779b71ff618a4d2d6fc9f9a3ca31ba9cd653))
+
+
+### Bug Fixes
+
+* **ci:** remove explicit pnpm version to use packageManager field ([4a8608e](https://github.com/elct9620/n8n-nodes-line-messaging/commit/4a8608e651a8e23edeb0b3d3d33bad5fd257a025))
+* **LineMessaging:** reorder quickReply field to display last for better UX ([870a6e9](https://github.com/elct9620/n8n-nodes-line-messaging/commit/870a6e9dfeb00e69bcc05ed6c24be03e42861604))
+
 ## [0.8.1](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.8.0...v0.8.1) (2025-10-22)
 
 
