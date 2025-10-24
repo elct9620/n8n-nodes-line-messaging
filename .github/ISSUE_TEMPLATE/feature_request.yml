@@ -1,0 +1,85 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for n8n-nodes-line-messaging
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a new feature! Please provide as much detail as possible to help us understand your request.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: A clear and concise description of the feature you'd like to see
+      placeholder: I would like to be able to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Describe the problem this feature would solve or the workflow it would enable
+      placeholder: |
+        This feature would help me...
+        My current workflow requires...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: How do you envision this feature working?
+      placeholder: |
+        The feature could work by...
+        It should allow users to...
+    validations:
+      required: false
+
+  - type: dropdown
+    id: node-type
+    attributes:
+      label: Which node would this feature affect?
+      description: Select the node(s) this feature relates to
+      multiple: true
+      options:
+        - LineMessaging (main messaging node)
+        - LineMessagingData (content retrieval)
+        - LineMessagingTrigger (webhook)
+        - New node type
+        - All nodes
+    validations:
+      required: true
+
+  - type: input
+    id: line-api-reference
+    attributes:
+      label: LINE Messaging API Reference
+      description: If this feature is based on a specific LINE API endpoint, please provide a link
+      placeholder: https://developers.line.biz/en/reference/messaging-api/#...
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, screenshots, or examples about the feature request
+      placeholder: |
+        Related LINE documentation:
+        Example use cases:
+        Similar features in other integrations:
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Contribution
+      description: Would you be willing to help implement this feature?
+      options:
+        - label: I would be interested in implementing this feature
+          required: false

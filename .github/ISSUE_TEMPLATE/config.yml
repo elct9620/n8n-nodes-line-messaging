@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: LINE Messaging API Documentation
+    url: https://developers.line.biz/en/docs/messaging-api/
+    about: Official LINE Messaging API documentation for API-related questions
+  - name: n8n Community Forum
+    url: https://community.n8n.io/
+    about: Get help from the n8n community for general n8n questions
+  - name: n8n Community Nodes Documentation
+    url: https://docs.n8n.io/integrations/community-nodes/
+    about: Learn more about n8n community nodes
