@@ -1,5 +1,6 @@
 export enum MessageType {
 	TextV2 = 'textV2',
+	Flex = 'flex',
 }
 
 type MessageAction = {
@@ -35,4 +36,10 @@ type TextV2 = {
 	quoteToken?: string;
 };
 
-export type Message = CommonMessage & TextV2;
+type FlexMessage = {
+	type: MessageType.Flex;
+	altText: string;
+	contents: unknown;
+};
+
+export type Message = (CommonMessage & TextV2) | (CommonMessage & FlexMessage);

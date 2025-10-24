@@ -1,4 +1,4 @@
-import { Action, Message, MessageType } from './Message';
+import { Action, Message, MessageType, QuickReply } from './Message';
 import { IDataObject, NodeOperationError } from 'n8n-workflow';
 
 /**
@@ -14,10 +14,12 @@ export class MessageFactory {
 		switch (type) {
 			case MessageType.TextV2:
 				return this.createTextV2Message(params);
+			case MessageType.Flex:
+				return this.createFlexMessage(params);
 			default:
 				throw new NodeOperationError(
 					{} as never,
-					`Unsupported message type: ${type}. Currently only 'textV2' messages are supported.`,
+					`Unsupported message type: ${type}. Currently only 'textV2' and 'flex' messages are supported.`,
 				);
 		}
 	}
@@ -37,42 +39,98 @@ export class MessageFactory {
 		}
 
 		// Add quick replies if provided
-		if (params.quickReply && (params.quickReply as IDataObject).items) {
-			const items = (params.quickReply as IDataObject).items as IDataObject[];
-
-			if (items && items.length > 0) {
-				const quickReplyItems = items.map((item) => {
-					const actionType = item.actionType as string;
-					let action: Action;
-
-					if (actionType === 'message') {
-						action = {
-							type: 'message',
-							label: item.label as string,
-							text: item.data as string,
-						};
-					} else {
-						// Default to postback
-						action = {
-							type: 'postback',
-							label: item.label as string,
-							data: item.data as string,
-							displayText: item.label as string,
-						};
-					}
-
-					return {
-						type: 'action',
-						action,
-					} as { type: 'action'; action: Action };
-				});
-
-				message.quickReply = {
-					items: quickReplyItems,
-				};
-			}
+		const quickReply = this.processQuickReply(params);
+		if (quickReply) {
+			message.quickReply = quickReply;
 		}
 
 		return message;
+	}
+
+	/**
+	 * Creates a Flex message
+	 */
+	private static createFlexMessage(params: IDataObject): Message {
+		const altText = params.altText as string;
+		const flexJson = params.flexJson as string;
+
+		// Validate altText is provided
+		if (!altText || altText.trim() === '') {
+			throw new NodeOperationError(
+				{} as never,
+				'Alt Text is required for Flex messages. Please provide alternative text for notifications.',
+			);
+		}
+
+		// Parse Flex message JSON
+		let contents: unknown;
+		try {
+			contents = JSON.parse(flexJson);
+		} catch (error) {
+			const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+			throw new NodeOperationError(
+				{} as never,
+				`Invalid Flex Message JSON: ${errorMessage}. Please ensure your JSON is valid.`,
+			);
+		}
+
+		const message: Message = {
+			type: MessageType.Flex,
+			altText,
+			contents,
+		};
+
+		// Add quick replies if provided
+		const quickReply = this.processQuickReply(params);
+		if (quickReply) {
+			message.quickReply = quickReply;
+		}
+
+		return message;
+	}
+
+	/**
+	 * Processes quick reply parameters and returns QuickReply object if valid
+	 */
+	private static processQuickReply(params: IDataObject): QuickReply | undefined {
+		if (!params.quickReply || !(params.quickReply as IDataObject).items) {
+			return undefined;
+		}
+
+		const items = (params.quickReply as IDataObject).items as IDataObject[];
+
+		if (!items || items.length === 0) {
+			return undefined;
+		}
+
+		const quickReplyItems = items.map((item) => {
+			const actionType = item.actionType as string;
+			let action: Action;
+
+			if (actionType === 'message') {
+				action = {
+					type: 'message',
+					label: item.label as string,
+					text: item.data as string,
+				};
+			} else {
+				// Default to postback
+				action = {
+					type: 'postback',
+					label: item.label as string,
+					data: item.data as string,
+					displayText: item.label as string,
+				};
+			}
+
+			return {
+				type: 'action',
+				action,
+			} as { type: 'action'; action: Action };
+		});
+
+		return {
+			items: quickReplyItems,
+		};
 	}
 }

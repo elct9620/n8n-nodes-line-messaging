@@ -27,15 +27,98 @@ export function getMessageProperties(operations: string[]): INodeProperties {
 				displayName: 'Message',
 				name: 'values',
 				values: [
+					/**
+					 * Alt Text - For Flex Messages
+					 */
 					{
-						displayName: 'Type',
-						name: 'type',
-						type: 'options',
-						default: 'textV2',
+						displayName: 'Alt Text',
+						name: 'altText',
+						type: 'string',
+						required: true,
+						default: '',
+						placeholder: 'This is a flex message',
+						description:
+							'Alternative text shown in notifications and when Flex message cannot be displayed',
+						displayOptions: {
+							show: {
+								type: [MessageType.Flex],
+							},
+						},
+					},
+
+					/**
+					 * Flex Message JSON
+					 */
+					{
+						displayName: 'Flex Message JSON',
+						name: 'flexJson',
+						type: 'json',
+						typeOptions: {
+							rows: 10,
+						},
+						default:
+							'{\n  "type": "bubble",\n  "body": {\n    "type": "box",\n    "layout": "vertical",\n    "contents": [\n      {\n        "type": "text",\n        "text": "Hello, World!"\n      }\n    ]\n  }\n}',
+						description:
+							'Flex Message container JSON. Design your message using <a href="https://developers.line.biz/flex-simulator/" target="_blank">LINE Flex Message Simulator</a>.',
+						displayOptions: {
+							show: {
+								type: [MessageType.Flex],
+							},
+						},
+					},
+
+					/**
+					 * Quick Reply
+					 */
+					{
+						displayName: 'Quick Reply',
+						name: 'quickReply',
+						type: 'fixedCollection',
+						typeOptions: {
+							multipleValues: true,
+							sortable: true,
+						},
+						default: {},
+						placeholder: 'Add Quick Reply',
 						options: [
 							{
-								name: 'Text Message (V2)',
-								value: MessageType.TextV2,
+								displayName: 'Quick Reply Item',
+								name: 'items',
+								values: [
+									{
+										displayName: 'Action Type',
+										name: 'actionType',
+										type: 'options',
+										default: 'postback',
+										options: [
+											{
+												name: 'Message',
+												value: 'message',
+											},
+											{
+												name: 'Postback',
+												value: 'postback',
+											},
+										],
+									},
+									{
+										displayName: 'Data',
+										name: 'data',
+										type: 'string',
+										default: '',
+										placeholder: '{"key":"value"}',
+										description:
+											'The data to send with the quick reply action. Format depends on action type.',
+									},
+									{
+										displayName: 'Label',
+										name: 'label',
+										type: 'string',
+										default: '',
+										placeholder: 'Quick Reply',
+										description: 'The label for the quick reply item',
+									},
+								],
 							},
 						],
 					},
@@ -77,57 +160,21 @@ export function getMessageProperties(operations: string[]): INodeProperties {
 					},
 
 					/**
-					 * Quick Reply
+					 * Type
 					 */
 					{
-						displayName: 'Quick Reply',
-						name: 'quickReply',
-						type: 'fixedCollection',
-						typeOptions: {
-							multipleValues: true,
-							sortable: true,
-						},
-						default: {},
-						placeholder: 'Add Quick Reply',
+						displayName: 'Type',
+						name: 'type',
+						type: 'options',
+						default: 'textV2',
 						options: [
 							{
-								displayName: 'Quick Reply Item',
-								name: 'items',
-								values: [
-									{
-										displayName: 'Label',
-										name: 'label',
-										type: 'string',
-										default: '',
-										placeholder: 'Quick Reply',
-										description: 'The label for the quick reply item',
-									},
-									{
-										displayName: 'Action Type',
-										name: 'actionType',
-										type: 'options',
-										default: 'postback',
-										options: [
-											{
-												name: 'Postback',
-												value: 'postback',
-											},
-											{
-												name: 'Message',
-												value: 'message',
-											},
-										],
-									},
-									{
-										displayName: 'Data',
-										name: 'data',
-										type: 'string',
-										default: '',
-										placeholder: '{"key":"value"}',
-										description:
-											'The data to send with the quick reply action. Format depends on action type.',
-									},
-								],
+								name: 'Flex Message',
+								value: MessageType.Flex,
+							},
+							{
+								name: 'Text Message (V2)',
+								value: MessageType.TextV2,
 							},
 						],
 					},
