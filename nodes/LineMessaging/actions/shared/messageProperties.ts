@@ -26,6 +26,21 @@ export function getMessageProperties(operations: string[]): INodeProperties {
 			{
 				displayName: 'Message',
 				name: 'values',
+				// For UX reason, fields are ordered by usage frequency rather than alphabetically
+				//
+				// # TextV2
+				// - Type (required, select first)
+				// - Text (required)
+				// - Quote Token (optional)
+				// - Quick Reply (optional)
+				//
+				// # Flex
+				// - Type (required, select first)
+				// - Alt Text (required)
+				// - Flex Message JSON (required)
+				// - Quick Reply (optional)
+				//
+				// eslint-disable-next-line n8n-nodes-base/node-param-fixed-collection-type-unsorted-items
 				values: [
 					/**
 					 * Alt Text - For Flex Messages
@@ -65,62 +80,6 @@ export function getMessageProperties(operations: string[]): INodeProperties {
 								type: [MessageType.Flex],
 							},
 						},
-					},
-
-					/**
-					 * Quick Reply
-					 */
-					{
-						displayName: 'Quick Reply',
-						name: 'quickReply',
-						type: 'fixedCollection',
-						typeOptions: {
-							multipleValues: true,
-							sortable: true,
-						},
-						default: {},
-						placeholder: 'Add Quick Reply',
-						options: [
-							{
-								displayName: 'Quick Reply Item',
-								name: 'items',
-								values: [
-									{
-										displayName: 'Action Type',
-										name: 'actionType',
-										type: 'options',
-										default: 'postback',
-										options: [
-											{
-												name: 'Message',
-												value: 'message',
-											},
-											{
-												name: 'Postback',
-												value: 'postback',
-											},
-										],
-									},
-									{
-										displayName: 'Data',
-										name: 'data',
-										type: 'string',
-										default: '',
-										placeholder: '{"key":"value"}',
-										description:
-											'The data to send with the quick reply action. Format depends on action type.',
-									},
-									{
-										displayName: 'Label',
-										name: 'label',
-										type: 'string',
-										default: '',
-										placeholder: 'Quick Reply',
-										description: 'The label for the quick reply item',
-									},
-								],
-							},
-						],
 					},
 
 					/**
@@ -175,6 +134,62 @@ export function getMessageProperties(operations: string[]): INodeProperties {
 							{
 								name: 'Text Message (V2)',
 								value: MessageType.TextV2,
+							},
+						],
+					},
+
+					/**
+					 * Quick Reply - Intentionally placed last as optional field for all message types
+					 */
+					{
+						displayName: 'Quick Reply (Optional)',
+						name: 'quickReply',
+						type: 'fixedCollection',
+						typeOptions: {
+							multipleValues: true,
+							sortable: true,
+						},
+						default: {},
+						placeholder: 'Add Quick Reply',
+						options: [
+							{
+								displayName: 'Quick Reply Item',
+								name: 'items',
+								values: [
+									{
+										displayName: 'Action Type',
+										name: 'actionType',
+										type: 'options',
+										default: 'postback',
+										options: [
+											{
+												name: 'Message',
+												value: 'message',
+											},
+											{
+												name: 'Postback',
+												value: 'postback',
+											},
+										],
+									},
+									{
+										displayName: 'Data',
+										name: 'data',
+										type: 'string',
+										default: '',
+										placeholder: '{"key":"value"}',
+										description:
+											'The data to send with the quick reply action. Format depends on action type.',
+									},
+									{
+										displayName: 'Label',
+										name: 'label',
+										type: 'string',
+										default: '',
+										placeholder: 'Quick Reply',
+										description: 'The label for the quick reply item',
+									},
+								],
 							},
 						],
 					},
