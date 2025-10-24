@@ -114,8 +114,10 @@ Operations are structured as separate modules in `actions/` folders:
 - **Send**: Proactively send messages to users using User IDs (POST /message/push)
 - **Multicast**: Send messages to multiple users simultaneously (POST /message/multicast, max 500 recipients)
 - **Get Profile**: Retrieve user profile information (GET /profile/{userId})
+- **Show Loading Animation**: Display loading animation to a user (POST /chat/loading/start)
 
-- **Get Content**: Retrieve message content like images, videos, audio files (now located in LineMessaging directory)
+**LineMessagingData Node:**
+- **Get Content**: Retrieve message content like images, videos, audio files (GET /message/{messageId}/content)
 
 **LineMessagingTrigger Node:**
 - **Webhook**: Receive and process LINE webhook events
@@ -150,18 +152,22 @@ The message creation is handled by a factory pattern in `nodes/LineMessaging/`:
 - **MessageFactory** (`Factory.ts`): Converts n8n UI parameters to LINE API message format
   - `createMessage()`: Main entry point that routes to specific message type creators
   - `createTextV2Message()`: Handles TextV2 with quote tokens and quick replies
+  - `createFlexMessage()`: Handles Flex messages with JSON contents and alt text
 - **Message types** (`Message.ts`): TypeScript enums and type definitions
-  - `MessageType.TextV2`: Currently the only supported message type
+  - `MessageType.TextV2`: Text messages with V2 features (quotes, quick replies)
+  - `MessageType.Flex`: Flexible visual messages using JSON templates
   - `Action`: Union type for message and postback quick reply actions
 - **Shared properties** (`actions/shared/`): Reusable UI configuration
   - `messageProperties.ts`: Common message field configurations shared across operations
   - `operationProperties.ts`: Common operation parameters
 
-**Extensibility**: To add new message types:
+**Extensibility**: To add new message types (follow the Flex message pattern as reference):
 1. Add enum value to `MessageType` in `Message.ts`
-2. Define type interface extending `CommonMessage` in `Message.ts`
-3. Add creation method in `MessageFactory` class
-4. Update UI options in `messageProperties.ts`
+2. Define type interface in `Message.ts` that extends with `CommonMessage`
+3. Add union type to `Message` export: `(CommonMessage & YourType)`
+4. Add creation method `createYourTypeMessage()` in `MessageFactory` class
+5. Add case in `createMessage()` switch statement to route to your method
+6. Update UI options in `messageProperties.ts` to expose the new type
 
 ## Error Handling Pattern
 
