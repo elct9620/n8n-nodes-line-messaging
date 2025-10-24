@@ -1,4 +1,4 @@
-import { Action, Message, MessageType, QuickReply } from './Message';
+import { Action, ActionType, Message, MessageType, QuickReply, QuickReplyItemType } from './Message';
 import { IDataObject, NodeOperationError } from 'n8n-workflow';
 
 /**
@@ -107,26 +107,26 @@ export class MessageFactory {
 			const actionType = item.actionType as string;
 			let action: Action;
 
-			if (actionType === 'message') {
+			if (actionType === ActionType.Postback) {
 				action = {
-					type: 'message',
-					label: item.label as string,
-					text: item.data as string,
-				};
-			} else {
-				// Default to postback
-				action = {
-					type: 'postback',
+					type: ActionType.Postback,
 					label: item.label as string,
 					data: item.data as string,
 					displayText: item.label as string,
 				};
+			} else {
+				// Default to message
+				action = {
+					type: ActionType.Message,
+					label: item.label as string,
+					text: item.data as string,
+				};
 			}
 
 			return {
-				type: 'action',
+				type: QuickReplyItemType.Action,
 				action,
-			} as { type: 'action'; action: Action };
+			} as { type: QuickReplyItemType.Action; action: Action };
 		});
 
 		return {

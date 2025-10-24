@@ -3,14 +3,23 @@ export enum MessageType {
 	Flex = 'flex',
 }
 
+export enum QuickReplyItemType {
+	Action = 'action',
+}
+
+export enum ActionType {
+	Message = 'message',
+	Postback = 'postback',
+}
+
 type MessageAction = {
-	type: 'message';
+	type: ActionType.Message;
 	label: string;
 	text: string;
 };
 
 type PostbackAction = {
-	type: 'postback';
+	type: ActionType.Postback;
 	label: string;
 	data: string;
 	displayText?: string;
@@ -20,7 +29,7 @@ export type Action = MessageAction | PostbackAction;
 
 export type QuickReply = {
 	items: Array<{
-		type: 'action';
+		type: QuickReplyItemType.Action;
 		action: Action;
 	}>;
 };

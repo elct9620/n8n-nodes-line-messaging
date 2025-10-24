@@ -1,5 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
-import { MessageType } from '../../Message';
+import { ActionType, MessageType } from '../../Message';
 
 /**
  * Creates the shared message properties configuration for LINE messaging operations
@@ -160,15 +160,16 @@ export function getMessageProperties(operations: string[]): INodeProperties {
 										displayName: 'Action Type',
 										name: 'actionType',
 										type: 'options',
-										default: 'postback',
+										required: true,
+										default: 'message',
 										options: [
 											{
 												name: 'Message',
-												value: 'message',
+												value: ActionType.Message,
 											},
 											{
 												name: 'Postback',
-												value: 'postback',
+												value: ActionType.Postback,
 											},
 										],
 									},
