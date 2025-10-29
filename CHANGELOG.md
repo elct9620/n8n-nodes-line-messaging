@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.9.0...v0.10.0) (2025-10-29)
+
+
+### Features
+
+* **LineMessagingTrigger:** add destination field to webhook events ([7260343](https://github.com/elct9620/n8n-nodes-line-messaging/commit/7260343c2ecacb9883216a07997fd3575869785e))
+
 ## [0.9.0](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.8.1...v0.9.0) (2025-10-24)
 
 
