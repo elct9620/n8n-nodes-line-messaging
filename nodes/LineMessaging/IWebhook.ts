@@ -28,6 +28,7 @@ type CommonProperties = {
 	source?: Source;
 	webhookEventId: string;
 	deliveryContext: DeliveryContext;
+	destination: string;
 };
 
 type EventMode =

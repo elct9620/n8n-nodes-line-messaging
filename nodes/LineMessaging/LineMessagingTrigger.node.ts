@@ -96,8 +96,14 @@ export class LineMessagingTrigger implements INodeType {
 			events = bodyData.events.filter((event) => desiredEvents.includes(event.type));
 		}
 
+		// Add destination to each event for bot identification
+		const eventsWithDestination = events.map((event) => ({
+			...event,
+			destination: bodyData.destination,
+		}));
+
 		return {
-			workflowData: [this.helpers.returnJsonArray(events)],
+			workflowData: [this.helpers.returnJsonArray(eventsWithDestination)],
 		};
 	}
 }

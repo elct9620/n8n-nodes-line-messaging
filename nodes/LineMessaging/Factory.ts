@@ -1,4 +1,11 @@
-import { Action, ActionType, Message, MessageType, QuickReply, QuickReplyItemType } from './Message';
+import {
+	Action,
+	ActionType,
+	Message,
+	MessageType,
+	QuickReply,
+	QuickReplyItemType,
+} from './Message';
 import { IDataObject, NodeOperationError } from 'n8n-workflow';
 
 /**
