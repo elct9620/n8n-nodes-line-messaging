@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         if: ${{ steps.release.outputs.release_created }}
       - name: Install pnpm
         uses: pnpm/action-setup@v4
