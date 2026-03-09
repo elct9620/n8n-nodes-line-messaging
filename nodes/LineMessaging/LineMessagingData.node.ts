@@ -4,7 +4,6 @@ import type {
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
-import { NodeConnectionType } from 'n8n-workflow';
 
 import * as getContent from './data-actions/getContent.operation';
 
@@ -21,8 +20,8 @@ export class LineMessagingData implements INodeType {
 			name: 'Line Messaging Data',
 		},
 		usableAsTool: true,
-		inputs: [NodeConnectionType.Main],
-		outputs: [NodeConnectionType.Main],
+		inputs: ['main'],
+		outputs: ['main'],
 		credentials: [
 			{
 				name: 'lineMessagingApi',

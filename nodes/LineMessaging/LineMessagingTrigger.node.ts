@@ -4,7 +4,7 @@ import type {
 	INodeTypeDescription,
 	IWebhookResponseData,
 } from 'n8n-workflow';
-import { NodeOperationError, NodeConnectionType } from 'n8n-workflow';
+import { NodeOperationError } from 'n8n-workflow';
 import { verifySignature } from './GenericFunctions';
 import { EventType, IEvent, type IWebhook } from './IWebhook';
 
@@ -23,7 +23,7 @@ export class LineMessagingTrigger implements INodeType {
 			name: 'Line Messaging Trigger',
 		},
 		inputs: [],
-		outputs: [NodeConnectionType.Main],
+		outputs: ['main'],
 		credentials: [
 			{
 				name: 'lineMessagingApi',
