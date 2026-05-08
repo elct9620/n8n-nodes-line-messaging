@@ -685,6 +685,9 @@ packages:
   '@types/node@25.6.0':
     resolution: {integrity: sha512-+qIYRKdNYJwY3vRCZMdJbPLJAtGjQBudzZzdzwQYkEPQd+PJGixUL5QfvCLDaULoLv+RhT3LDkwEfKaAkgSmNQ==}
 
+  '@types/node@25.6.2':
+    resolution: {integrity: sha512-sokuT28dxf9JT5Kady1fsXOvI4HVpjZa95NKT5y9PNTIrs2AsobR4GFAA90ZG8M+nxVRLysCXsVj6eGC7Vbrlw==}
+
   '@types/semver@7.7.1':
     resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
 
@@ -948,8 +951,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  axios@1.15.1:
-    resolution: {integrity: sha512-WOG+Jj8ZOvR0a3rAn+Tuf1UQJRxw5venr6DgdbJzngJE3qG7X0kL83CZGpdHMxEm+ZK3seAbvFsw4FfOfP9vxg==}
+  axios@1.16.0:
+    resolution: {integrity: sha512-6hp5CwvTPlN2A31g5dxnwAX0orzM7pmCRDLnZSX772mv8WDqICwFjowHuPs04Mc8deIld1+ejhtaMn5vp6b+1w==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -2185,6 +2188,7 @@ packages:
 
   uuid@10.0.0:
     resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   uuid@11.1.0:
@@ -3128,7 +3132,7 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 25.6.0
+      '@types/node': 25.6.2
       form-data: 4.0.5
 
   '@types/node@18.19.130':
@@ -3136,6 +3140,10 @@ snapshots:
       undici-types: 5.26.5
 
   '@types/node@25.6.0':
+    dependencies:
+      undici-types: 7.19.2
+
+  '@types/node@25.6.2':
     dependencies:
       undici-types: 7.19.2
 
@@ -3401,7 +3409,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  axios@1.15.1(debug@4.4.3):
+  axios@1.16.0(debug@4.4.3):
     dependencies:
       follow-redirects: 1.16.0(debug@4.4.3)
       form-data: 4.0.5
@@ -3923,7 +3931,7 @@ snapshots:
       '@types/debug': 4.1.13
       '@types/node': 18.19.130
       '@types/tough-cookie': 4.0.5
-      axios: 1.15.1(debug@4.4.3)
+      axios: 1.16.0(debug@4.4.3)
       camelcase: 6.3.0
       debug: 4.4.3(supports-color@8.1.1)
       dotenv: 16.6.1
@@ -3933,7 +3941,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.3
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.15.1)
+      retry-axios: 2.6.0(axios@1.16.0(debug@4.4.3))
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -4416,9 +4424,9 @@ snapshots:
 
   resolve-pkg-maps@1.0.0: {}
 
-  retry-axios@2.6.0(axios@1.15.1):
+  retry-axios@2.6.0(axios@1.16.0(debug@4.4.3)):
     dependencies:
-      axios: 1.15.1(debug@4.4.3)
+      axios: 1.16.0(debug@4.4.3)
 
   reusify@1.1.0: {}
 
