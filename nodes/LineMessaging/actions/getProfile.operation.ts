@@ -1,9 +1,4 @@
-import type {
-	IExecuteFunctions,
-	INodeExecutionData,
-	INodeProperties,
-	JsonObject,
-} from 'n8n-workflow';
+import type { IExecuteFunctions, INodeExecutionData, INodeProperties } from 'n8n-workflow';
 import { NodeOperationError } from 'n8n-workflow';
 import { apiRequest } from '../GenericFunctions';
 
@@ -26,48 +21,28 @@ export const properties: INodeProperties[] = [
 
 export const description = properties;
 
-export async function execute(this: IExecuteFunctions, items: INodeExecutionData[]) {
-	const returnData: INodeExecutionData[] = [];
+export async function processItem(
+	this: IExecuteFunctions,
+	itemIndex: number,
+): Promise<INodeExecutionData> {
+	const userId = this.getNodeParameter('userId', itemIndex) as string;
 
-	for (let i = 0; i < items.length; i++) {
-		try {
-			const userId = this.getNodeParameter('userId', i) as string;
-
-			if (!userId) {
-				throw new NodeOperationError(
-					this.getNode(),
-					'User ID is required. Use the LINE user ID from webhook or other sources.',
-				);
-			}
-
-			// Make API call to Line Messaging API to get profile
-			const responseData = await apiRequest.call(this, 'GET', `/profile/${userId}`, {});
-
-			returnData.push({
-				json: {
-					success: true,
-					profile: responseData,
-				},
-				pairedItem: {
-					item: i,
-				},
-			});
-		} catch (error) {
-			if (this.continueOnFail()) {
-				returnData.push({
-					json: {
-						success: false,
-						error: (error as JsonObject).message,
-					},
-					pairedItem: {
-						item: i,
-					},
-				});
-				continue;
-			}
-			throw error;
-		}
+	if (!userId) {
+		throw new NodeOperationError(
+			this.getNode(),
+			'User ID is required. Use the LINE user ID from webhook or other sources.',
+			{ itemIndex },
+		);
 	}
 
-	return returnData;
+	// Make API call to Line Messaging API to get profile
+	const responseData = await apiRequest.call(this, 'GET', `/profile/${userId}`, {});
+
+	return {
+		json: {
+			success: true,
+			profile: responseData,
+		},
+		pairedItem: { item: itemIndex },
+	};
 }

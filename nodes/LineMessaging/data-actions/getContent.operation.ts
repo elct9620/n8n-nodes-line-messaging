@@ -4,7 +4,6 @@ import {
 	INodeProperties,
 	IDataObject,
 	IBinaryData,
-	JsonObject,
 	sleep,
 	NodeOperationError,
 	IN8nHttpFullResponse,
@@ -65,130 +64,111 @@ export const properties: INodeProperties[] = [
 
 export const description = properties;
 
-export async function execute(this: IExecuteFunctions, items: INodeExecutionData[]) {
-	const returnData: INodeExecutionData[] = [];
+export async function processItem(
+	this: IExecuteFunctions,
+	itemIndex: number,
+): Promise<INodeExecutionData> {
+	const messageId = this.getNodeParameter('messageId', itemIndex) as string;
+	const binaryPropertyName = this.getNodeParameter('binaryPropertyName', itemIndex) as string;
+	const additionalOptions = this.getNodeParameter(
+		'additionalOptions',
+		itemIndex,
+		{},
+	) as IDataObject;
 
-	for (let i = 0; i < items.length; i++) {
-		try {
-			const messageId = this.getNodeParameter('messageId', i) as string;
-			const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
-			const additionalOptions = this.getNodeParameter('additionalOptions', i, {}) as IDataObject;
+	// Check if we should check transcoding status first
+	if (additionalOptions.checkTranscoding === true) {
+		const retryCount = (additionalOptions.retryCount as number) || 3;
+		const retryInterval = ((additionalOptions.retryInterval as number) || 3) * 1000;
 
-			// Check if we should check transcoding status first
-			if (additionalOptions.checkTranscoding === true) {
-				const retryCount = (additionalOptions.retryCount as number) || 3;
-				const retryInterval = ((additionalOptions.retryInterval as number) || 3) * 1000;
+		let transcodingStatus: string = 'processing';
+		let currentRetry = 0;
 
-				let transcodingStatus: string = 'processing';
-				let currentRetry = 0;
-
-				while (transcodingStatus === 'processing' && currentRetry < retryCount) {
-					// Check transcoding status
-					const response = await apiDataRequest.call(
-						this,
-						'GET',
-						`/message/${messageId}/content/transcoding`,
-						{},
-					);
-
-					if (
-						response &&
-						typeof response === 'object' &&
-						'status' in response &&
-						typeof response.status === 'string'
-					) {
-						transcodingStatus = response.status;
-					}
-
-					if (transcodingStatus === 'processing') {
-						// Wait before retrying
-						await sleep(retryInterval);
-						currentRetry++;
-					} else if (transcodingStatus === 'failed') {
-						throw new NodeOperationError(
-							this.getNode(),
-							'Content transcoding failed. The file may be corrupted or unsupported.',
-						);
-					}
-				}
-
-				if (transcodingStatus === 'processing') {
-					throw new NodeOperationError(
-						this.getNode(),
-						'Content is still processing after maximum retries. Try again later or increase retry count.',
-					);
-				}
-			}
-
-			// Request content using apiDataRequest with custom options for binary data
-			const response = (await apiDataRequest.call(
+		while (transcodingStatus === 'processing' && currentRetry < retryCount) {
+			// Check transcoding status
+			const response = await apiDataRequest.call(
 				this,
 				'GET',
-				`/message/${messageId}/content`,
+				`/message/${messageId}/content/transcoding`,
 				{},
-				{},
-				{
-					encoding: 'arraybuffer',
-					json: false,
-					returnFullResponse: true,
-				},
-			)) as IN8nHttpFullResponse;
-
-			// Extract content type and body with proper type checking
-			let contentType = 'application/octet-stream';
-			const responseBody = response.body;
-
-			if ('headers' in response) {
-				contentType = (response.headers['content-type'] as string) || contentType;
-			}
-
-			if (!responseBody) {
-				throw new NodeOperationError(
-					this.getNode(),
-					'Failed to retrieve content data from LINE API',
-				);
-			}
-
-			const fileExtension = getFileExtension(contentType);
-			const fileName = `line_content_${messageId}${fileExtension}`;
-			const binaryData: IBinaryData = await this.helpers.prepareBinaryData(
-				responseBody as Buffer,
-				fileName,
-				contentType,
 			);
 
-			// Add binary data to the item
-			const newItem: INodeExecutionData = {
-				json: {
-					messageId,
-					success: true,
-					contentType,
-				},
-				binary: {
-					[binaryPropertyName]: binaryData,
-				},
-				pairedItem: {
-					item: i,
-				},
-			};
-
-			returnData.push(newItem);
-		} catch (error) {
-			if (this.continueOnFail()) {
-				returnData.push({
-					json: {
-						success: false,
-						error: (error as JsonObject).message,
-					},
-					pairedItem: {
-						item: i,
-					},
-				});
-				continue;
+			if (
+				response &&
+				typeof response === 'object' &&
+				'status' in response &&
+				typeof response.status === 'string'
+			) {
+				transcodingStatus = response.status;
 			}
-			throw error;
+
+			if (transcodingStatus === 'processing') {
+				// Wait before retrying
+				await sleep(retryInterval);
+				currentRetry++;
+			} else if (transcodingStatus === 'failed') {
+				throw new NodeOperationError(
+					this.getNode(),
+					'Content transcoding failed. The file may be corrupted or unsupported.',
+					{ itemIndex },
+				);
+			}
+		}
+
+		if (transcodingStatus === 'processing') {
+			throw new NodeOperationError(
+				this.getNode(),
+				'Content is still processing after maximum retries. Try again later or increase retry count.',
+				{ itemIndex },
+			);
 		}
 	}
 
-	return returnData;
+	// Request content using apiDataRequest with custom options for binary data
+	const response = (await apiDataRequest.call(
+		this,
+		'GET',
+		`/message/${messageId}/content`,
+		{},
+		{},
+		{
+			encoding: 'arraybuffer',
+			json: false,
+			returnFullResponse: true,
+		},
+	)) as IN8nHttpFullResponse;
+
+	// Extract content type and body with proper type checking
+	let contentType = 'application/octet-stream';
+	const responseBody = response.body;
+
+	if ('headers' in response) {
+		contentType = (response.headers['content-type'] as string) || contentType;
+	}
+
+	if (!responseBody) {
+		throw new NodeOperationError(this.getNode(), 'Failed to retrieve content data from LINE API', {
+			itemIndex,
+		});
+	}
+
+	const fileExtension = getFileExtension(contentType);
+	const fileName = `line_content_${messageId}${fileExtension}`;
+	const binaryData: IBinaryData = await this.helpers.prepareBinaryData(
+		responseBody as Buffer,
+		fileName,
+		contentType,
+	);
+
+	return {
+		json: {
+			messageId,
+			success: true,
+			contentType,
+		},
+		binary: {
+			[binaryPropertyName]: binaryData,
+		},
+		pairedItem: { item: itemIndex },
+	};
 }

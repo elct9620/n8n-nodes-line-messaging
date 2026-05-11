@@ -1,9 +1,4 @@
-import type {
-	IExecuteFunctions,
-	INodeExecutionData,
-	INodeProperties,
-	JsonObject,
-} from 'n8n-workflow';
+import type { IExecuteFunctions, INodeExecutionData, INodeProperties } from 'n8n-workflow';
 import { NodeOperationError } from 'n8n-workflow';
 import { apiRequest } from '../GenericFunctions';
 
@@ -88,49 +83,29 @@ export const properties: INodeProperties[] = [
 
 export const description = properties;
 
-export async function execute(this: IExecuteFunctions, items: INodeExecutionData[]) {
-	const returnData: INodeExecutionData[] = [];
+export async function processItem(
+	this: IExecuteFunctions,
+	itemIndex: number,
+): Promise<INodeExecutionData> {
+	const chatId = this.getNodeParameter('chatId', itemIndex, '') as string;
+	const loadingSeconds = this.getNodeParameter('loadingSeconds', itemIndex, 20) as number;
 
-	for (let i = 0; i < items.length; i++) {
-		try {
-			const chatId = this.getNodeParameter('chatId', i, '') as string;
-			const loadingSeconds = this.getNodeParameter('loadingSeconds', i, 20) as number;
-
-			if (!chatId) {
-				throw new NodeOperationError(
-					this.getNode(),
-					'Chat ID is required. Use the LINE user ID from webhook or profile.',
-				);
-			}
-
-			// Make API call to Line Messaging API
-			const responseData = await apiRequest.call(this, 'POST', '/chat/loading/start', {
-				chatId,
-				loadingSeconds,
-			});
-
-			returnData.push({
-				json: { success: true, response: responseData },
-				pairedItem: {
-					item: i,
-				},
-			});
-		} catch (error) {
-			if (this.continueOnFail()) {
-				returnData.push({
-					json: {
-						success: false,
-						error: (error as JsonObject).message,
-					},
-					pairedItem: {
-						item: i,
-					},
-				});
-				continue;
-			}
-			throw error;
-		}
+	if (!chatId) {
+		throw new NodeOperationError(
+			this.getNode(),
+			'Chat ID is required. Use the LINE user ID from webhook or profile.',
+			{ itemIndex },
+		);
 	}
 
-	return returnData;
+	// Make API call to Line Messaging API
+	const responseData = await apiRequest.call(this, 'POST', '/chat/loading/start', {
+		chatId,
+		loadingSeconds,
+	});
+
+	return {
+		json: { success: true, response: responseData },
+		pairedItem: { item: itemIndex },
+	};
 }

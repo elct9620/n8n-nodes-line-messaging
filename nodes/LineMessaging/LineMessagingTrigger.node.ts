@@ -1,10 +1,11 @@
 import type {
 	IWebhookFunctions,
+	IHookFunctions,
 	INodeType,
 	INodeTypeDescription,
 	IWebhookResponseData,
 } from 'n8n-workflow';
-import { NodeOperationError } from 'n8n-workflow';
+import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
 import { verifySignature } from './GenericFunctions';
 import { EventType, IEvent, type IWebhook } from './IWebhook';
 
@@ -23,7 +24,7 @@ export class LineMessagingTrigger implements INodeType {
 			name: 'Line Messaging Trigger',
 		},
 		inputs: [],
-		outputs: ['main'],
+		outputs: [NodeConnectionTypes.Main],
 		credentials: [
 			{
 				name: 'lineMessagingApi',
@@ -39,6 +40,13 @@ export class LineMessagingTrigger implements INodeType {
 			},
 		],
 		properties: [
+			{
+				displayName:
+					'LINE webhooks must be registered manually in the <a href="https://developers.line.biz/console/" target="_blank">LINE Developers Console</a>. Copy this node\'s Production webhook URL and paste it into your channel\'s Webhook settings.',
+				name: 'manualSetupNotice',
+				type: 'notice',
+				default: '',
+			},
 			{
 				displayName: 'Trigger On',
 				name: 'events',
@@ -58,6 +66,24 @@ export class LineMessagingTrigger implements INodeType {
 				],
 			},
 		],
+	};
+
+	// LINE webhooks are configured manually via the LINE Developers Console
+	// (POST /v2/bot/channel/webhook/endpoint exists but lacks a true delete
+	// operation, and bot operators usually own the console). These methods exist
+	// only to satisfy n8n's webhook lifecycle contract.
+	webhookMethods = {
+		default: {
+			async checkExists(this: IHookFunctions): Promise<boolean> {
+				return true;
+			},
+			async create(this: IHookFunctions): Promise<boolean> {
+				return true;
+			},
+			async delete(this: IHookFunctions): Promise<boolean> {
+				return true;
+			},
+		},
 	};
 
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {

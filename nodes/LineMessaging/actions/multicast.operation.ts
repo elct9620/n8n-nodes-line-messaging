@@ -3,7 +3,6 @@ import type {
 	INodeExecutionData,
 	INodeProperties,
 	IDataObject,
-	JsonObject,
 } from 'n8n-workflow';
 import { NodeOperationError } from 'n8n-workflow';
 import { apiRequest } from '../GenericFunctions';
@@ -41,88 +40,71 @@ export const properties: INodeProperties[] = [
 
 export const description = properties;
 
-export async function execute(this: IExecuteFunctions, items: INodeExecutionData[]) {
-	const returnData: INodeExecutionData[] = [];
+export async function processItem(
+	this: IExecuteFunctions,
+	itemIndex: number,
+): Promise<INodeExecutionData> {
+	const messagesCollection = this.getNodeParameter('messages', itemIndex, {
+		values: [],
+	}) as { values: IDataObject[] };
 
-	for (let i = 0; i < items.length; i++) {
-		try {
-			const messagesCollection = this.getNodeParameter('messages', i, {
-				values: [],
-			}) as { values: IDataObject[] };
+	// Transform the input parameters into LINE API compatible messages
+	const messages = (messagesCollection.values || []).map((params) =>
+		MessageFactory.createMessage(params),
+	);
+	const toInput = this.getNodeParameter('to', itemIndex, '') as string;
 
-			// Transform the input parameters into LINE API compatible messages
-			const messages = (messagesCollection.values || []).map((params) =>
-				MessageFactory.createMessage(params),
-			);
-			const toInput = this.getNodeParameter('to', i, '') as string;
-
-			if (!toInput) {
-				throw new NodeOperationError(
-					this.getNode(),
-					'User IDs are required. Provide comma-separated LINE user IDs.',
-				);
-			}
-
-			// Parse comma-separated User IDs and trim whitespace
-			const to = toInput
-				.split(',')
-				.map((id) => id.trim())
-				.filter((id) => id.length > 0);
-
-			if (to.length === 0) {
-				throw new NodeOperationError(
-					this.getNode(),
-					'At least one valid User ID is required. Check your comma-separated list.',
-				);
-			}
-
-			if (to.length > 500) {
-				throw new NodeOperationError(
-					this.getNode(),
-					'Maximum 500 recipients allowed. You provided ' + to.length + ' user IDs.',
-				);
-			}
-
-			if (messages.length === 0) {
-				throw new NodeOperationError(
-					this.getNode(),
-					'At least one message is required. Add text, image, or other message types.',
-				);
-			}
-
-			// Make API call to Line Messaging API
-			const responseData = await apiRequest.call(this, 'POST', '/message/multicast', {
-				to,
-				messages,
-			});
-
-			returnData.push({
-				json: {
-					success: true,
-					response: responseData,
-					recipientCount: to.length,
-					userIds: to,
-				},
-				pairedItem: {
-					item: i,
-				},
-			});
-		} catch (error) {
-			if (this.continueOnFail()) {
-				returnData.push({
-					json: {
-						success: false,
-						error: (error as JsonObject).message,
-					},
-					pairedItem: {
-						item: i,
-					},
-				});
-				continue;
-			}
-			throw error;
-		}
+	if (!toInput) {
+		throw new NodeOperationError(
+			this.getNode(),
+			'User IDs are required. Provide comma-separated LINE user IDs.',
+			{ itemIndex },
+		);
 	}
 
-	return returnData;
+	// Parse comma-separated User IDs and trim whitespace
+	const to = toInput
+		.split(',')
+		.map((id) => id.trim())
+		.filter((id) => id.length > 0);
+
+	if (to.length === 0) {
+		throw new NodeOperationError(
+			this.getNode(),
+			'At least one valid User ID is required. Check your comma-separated list.',
+			{ itemIndex },
+		);
+	}
+
+	if (to.length > 500) {
+		throw new NodeOperationError(
+			this.getNode(),
+			'Maximum 500 recipients allowed. You provided ' + to.length + ' user IDs.',
+			{ itemIndex },
+		);
+	}
+
+	if (messages.length === 0) {
+		throw new NodeOperationError(
+			this.getNode(),
+			'At least one message is required. Add text, image, or other message types.',
+			{ itemIndex },
+		);
+	}
+
+	// Make API call to Line Messaging API
+	const responseData = await apiRequest.call(this, 'POST', '/message/multicast', {
+		to,
+		messages,
+	});
+
+	return {
+		json: {
+			success: true,
+			response: responseData,
+			recipientCount: to.length,
+			userIds: to,
+		},
+		pairedItem: { item: itemIndex },
+	};
 }
