@@ -1,8 +1,8 @@
 {
 	"compilerOptions": {
 		"strict": true,
-		"module": "commonjs",
-		"moduleResolution": "node",
+		"module": "node16",
+		"moduleResolution": "node16",
 		"target": "es2021",
 		"types": ["node", "n8n-workflow"],
 		"lib": ["es2021", "es2022.error", "dom"],
