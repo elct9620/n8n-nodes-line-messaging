@@ -27,7 +27,8 @@
 		"node": ">=20.15"
 	},
 	"author": {
-		"name": "Aotokitsuruya"
+		"name": "Aotokitsuruya",
+		"email": "contact@aotoki.me"
 	},
 	"license": "MIT",
 	"n8n": {
