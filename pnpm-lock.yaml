@@ -17,7 +17,7 @@ importers:
         version: 0.38.8(@browserbasehq/sdk@2.16.0)(@browserbasehq/stagehand@1.14.0(@playwright/test@1.58.2)(deepmerge@4.3.1)(dotenv@16.6.1)(openai@6.46.0(ws@8.21.1)(zod@3.25.67))(zod@3.25.67))(@ibm-cloud/watsonx-ai@1.7.8)(@opentelemetry/api@1.9.1)(@opentelemetry/core@2.9.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.9.0(@opentelemetry/api@1.9.1))(@typescript-eslint/utils@8.63.0(eslint@9.39.2)(typescript@6.0.3))(eslint@9.39.2)(ibm-cloud-sdk-core@5.4.8)(ignore@7.0.6)(jsonwebtoken@9.0.3)(n8n-workflow@2.29.3(@opentelemetry/core@2.9.0(@opentelemetry/api@1.9.1))(zod@3.25.67))(openai@6.46.0(ws@8.21.1)(zod@3.25.67))(playwright@1.58.2)(typescript@6.0.3)(ws@8.21.1)
       '@types/node':
         specifier: ^26.0.0
-        version: 26.1.0
+        version: 26.1.1
       eslint:
         specifier: ^9.36.0
         version: 9.39.2
@@ -899,9 +899,6 @@ packages:
 
   '@types/node@18.19.130':
     resolution: {integrity: sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg==}
-
-  '@types/node@26.1.0':
-    resolution: {integrity: sha512-O0A1G3xPGy4w7AgQdAQYUlQ+BKk2Oovw8eRpofyp5KdBZULnbe+WqaOVNrm705SHphCiG4XHsACrSmPu1f+Kgw==}
 
   '@types/node@26.1.1':
     resolution: {integrity: sha512-nxAkRSVkN1Y0JC1W8ky/fTfkGsMmcrRsbx+3XoZE+rMOX71kLYTV7fLXpqud1GpbpP5TuffXFqfX7fH2GgZREw==}
@@ -3834,10 +3831,6 @@ snapshots:
   '@types/node@18.19.130':
     dependencies:
       undici-types: 5.26.5
-
-  '@types/node@26.1.0':
-    dependencies:
-      undici-types: 8.3.0
 
   '@types/node@26.1.1':
     dependencies:
