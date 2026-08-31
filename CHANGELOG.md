@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.10.1](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.10.0...v0.10.1) (2026-08-31)
+
+
+### Bug Fixes
+
+* add email to author field for valid-author lint rule ([d08d77b](https://github.com/elct9620/n8n-nodes-line-messaging/commit/d08d77bc8559db95ca568ac4bf884b0b2e35d5ec))
+* remove duplicate @types/node@26.1.0 entries from lockfile ([7f09661](https://github.com/elct9620/n8n-nodes-line-messaging/commit/7f0966120eb1f11a8b2b881d9e652ed07cdbdcdb))
+
 ## [0.10.0](https://github.com/elct9620/n8n-nodes-line-messaging/compare/v0.9.0...v0.10.0) (2025-10-29)
 
 
